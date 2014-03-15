@@ -1,0 +1,29 @@
+{
+  "name": "eris",
+  "version": "0.0.0",
+  "description": "Eris game",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jphuttun/eris"
+  },
+  "keywords": [
+    "eris"
+  ],
+  "author": "pasi huttunen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jphuttun/eris/issues"
+  },
+  "homepage": "https://github.com/jphuttun/eris",
+  "dependencies": {
+    "logfmt": "^0.23.0",
+    "express": "^3.4.8"
+  }
+  "engines": {
+    "node": "0.10.x"
+  }
+}
