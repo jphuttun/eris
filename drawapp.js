@@ -10,11 +10,14 @@ var fileServer = new static.Server('./');
 
 // This is the port for our web server.
 // you will need to go to http://localhost:8080 to see it
-app.listen(5000);
+var port = Number(process.env.PORT || 5000);
+app.listen(port);
 
 // If the URL of the socket server is opened in a browser
 function handler (request, response) {
-    fileServer.serve(request, response); // this will return the correct file
+    request.addListener('end', function () {
+        fileServer.serve(request, response); // this will return the correct file
+    });
 }
 
 // Delete this row if you want to see debug messages
