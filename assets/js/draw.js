@@ -7,7 +7,7 @@ $(function(){
     }
 
     // The URL of your web server (the port is set in app.js)
-    var url = 'http://shielded-crag-6712.herokuapp.com:5000';
+    var url = 'http://shielded-crag-6712.herokuapp.com';
 
     var doc = $(document),
         win = $(window),
