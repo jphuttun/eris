@@ -2,7 +2,7 @@
   "name": "eris",
   "version": "0.0.0",
   "description": "Eris game",
-  "main": "web.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,7 +21,9 @@
   "homepage": "https://github.com/jphuttun/eris",
   "dependencies": {
     "logfmt": "^0.23.0",
-    "express": "^3.4.8"
+    "express": "^3.4.8",
+    "socket.io": "^0.9.16",
+    "node-static": "^0.7.3"
   },
   "engines": {
     "node": "0.10.x"
