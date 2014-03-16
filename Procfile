@@ -1,1 +1,1 @@
-web: node drawapp.js
+web: node erisindex.js

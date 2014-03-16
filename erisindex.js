@@ -18,10 +18,7 @@ var port = Number(process.env.PORT || 5000);
 // Initiate static html server
 app.get('/', function(request, response) 
 {
-    response.sendfile(__dirname + '/index.html');
-}).get('/demos/draw', function(request, response)
-{
-	response.sendfile(__dirname + '/demos/draw.html');
+    response.sendfile(__dirname + '/erisindex.html');
 }).configure(function() 
 {
     app.use('/images', express.static(__dirname + '/images'));
