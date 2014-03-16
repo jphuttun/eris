@@ -14,14 +14,11 @@ app.listen(5000);
 
 // If the URL of the socket server is opened in a browser
 function handler (request, response) {
-
-    request.addListener('end', function () {
-        fileServer.serve(request, response); // this will return the correct file
-    });
+    fileServer.serve(request, response); // this will return the correct file
 }
 
 // Delete this row if you want to see debug messages
-//io.set('log level', 1);
+io.set('log level', 1);
 
 // Listen for incoming connections from clients
 io.sockets.on('connection', function (socket) {
