@@ -236,15 +236,16 @@ App = function()
 				//		"testScore" : 42
 				//	}
 				
-				this.serverResponse = {};
+				/*this.serverResponse = {};
 				var dataToSend = "ReachObject¤cauldron";
 				var url = 'http://www.example.com/doSomething.php?';
 				url = url + encodeURIComponent(dataToSend);
 				wade.preloadJson(url, this.serverResponse, 0, 1);
 				
 				var puhuFraasi = this.serverResponse.data.testString;
-				
-				witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?#'+puhuFraasi, 4000);
+				*/
+				//witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?#'+puhuFraasi, 4000);
+                witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?#', 4000);
                 witch.canMove = true;
             }
             if (eventData.object.isFlower)
