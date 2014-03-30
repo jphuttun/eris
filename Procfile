@@ -1,1 +1,1 @@
-web: node erisindex.js
+web: node app.js
