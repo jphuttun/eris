@@ -226,7 +226,25 @@ App = function()
         {
             if (eventData.object.getName() == 'cauldron')
             {
-                witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?', 4000);
+                // Tässä kohdassa ladataan tietoa serveriltä ja lähetetään tietoa serverille (esim. peliobjective saavutettu ja sitä
+				// vastaavat tiedot ladataan serveriltä, samalla kun lähetetään serverille tiedot kentän edistymisestä tiettyyn pisteeseen)
+				
+				// Serveri voisi palauttaa esim. alta löytyvän JSON tiedoston
+				
+				//   {
+				//		"testString" : "We reach the object! Should we continue attack or secure this location?",
+				//		"testScore" : 42
+				//	}
+				
+				this.serverResponse = {};
+				var dataToSend = "ReachObject¤cauldron";
+				var url = 'http://www.example.com/doSomething.php?';
+				url = url + encodeURIComponent(dataToSend);
+				wade.preloadJson(url, this.serverResponse, 0, 1);
+				
+				var puhuFraasi = this.serverResponse.data.testString;
+				
+				witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?#'+puhuFraasi, 4000);
                 witch.canMove = true;
             }
             if (eventData.object.isFlower)
