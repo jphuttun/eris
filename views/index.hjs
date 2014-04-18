@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html>
-	<head>
-    	<title>{{ title }}</title>
-    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-        <script src="javascripts/wade11/wade_1.1.js"></script>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style2.css" />
+    <title>{{title}}</title>
 
-        <script>
-            $(document).ready(function()
-            {
-                wade.init('javascripts/simple.js');
-            });
-        </script>       
-	</head>
-	<body>
-        <div id="container" style="border:1px solid black; width:800px; height:10px;">
-            <div id="wade_main_div" width="800" height="10" tabindex="1"></div>
-        </div>
-    </body>
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="javascripts/wade11/wade_1.1.js"></script>
+    <script src="javascripts/wadeiso11/wade.iso_1.1.js"></script>
+
+    
+    <script>
+        $(document).ready(function()
+        {
+            wade.init('javascripts/erisgame.js');
+        });
+
+    </script>
+</head>
+
+<body>
+
+<div id="container" style="border:0; width:800px; height:600px;">
+    <div id="wade_main_div" width="800" height="600" tabindex="1">
+    </div>
+</div>
+
+</body>
 </html>
 

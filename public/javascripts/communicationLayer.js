@@ -15,7 +15,7 @@ communicationLayer = function() {
 		console.log('Aye!');
 	};	// end talk
 	
-	this.getConnectionStatus() {
+	this.getConnectionStatus = function() {
 		console.log('Stub: Pitäisi palauttaa yhteyden statuksen (todennäköisesti nopeus kt/s sekä ping).');
 			// Pingiä tarvittaneen, jos lähetetään lyhyitä viestejä paljon ja niiltä vaaditaan serveriltä vastaus
 			// Kilotavuja tarvitaan, kun siirretään paljon tietoa, kuten karttoja, kuvia, kokonaisia koodinpätkiä yms.
