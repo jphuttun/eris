@@ -8,35 +8,35 @@ App = function()
 		wade.preloadScript('./debugInterf.js');
 		// Decide will actions ("messages") send to local script or remote server
 		wade.preloadScript('./communicationLayer.js');
-		
-		wade.setLoadingImages('images/loading.png');
+	
+		wade.setLoadingImages('../images/loading.png');
 
         // load images
-        wade.loadImage('images/grass0.png');
-        wade.loadImage('images/sand0.png');
-        wade.loadImage('images/grass0_allSides.png');
-        wade.loadImage('images/daisies0.png');
-        wade.loadImage('images/daisies1.png');
-        wade.loadImage('images/daisies2.png');
-        wade.loadImage('images/daisies3.png');
-        wade.loadImage('images/plant.png');
-        wade.loadImage('images/cauldron.png');
-        wade.loadImage('images/flower.png');
-        wade.loadImage('images/smoke.png');
-        wade.loadImage('images/house.png');
-        wade.loadImage('images/callout.png');
-        wade.loadImage('images/witch_Crouch_iso_ne.png');
-        wade.loadImage('images/beach.png');
-        wade.loadImage('images/beach_corner.png');
-        wade.loadImage('images/cursor.png');
-        wade.loadImage('images/sparkle.png');
+        wade.loadImage('../images/grass0.png');
+        wade.loadImage('../images/sand0.png');
+        wade.loadImage('../images/grass0_allSides.png');
+        wade.loadImage('../images/daisies0.png');
+        wade.loadImage('../images/daisies1.png');
+        wade.loadImage('../images/daisies2.png');
+        wade.loadImage('../images/daisies3.png');
+        wade.loadImage('../images/plant.png');
+        wade.loadImage('../images/cauldron.png');
+        wade.loadImage('../images/flower.png');
+        wade.loadImage('../images/smoke.png');
+        wade.loadImage('../images/house.png');
+        wade.loadImage('../images/callout.png');
+        wade.loadImage('../images/witch_Crouch_iso_ne.png');
+        wade.loadImage('../images/beach.png');
+        wade.loadImage('../images/beach_corner.png');
+        wade.loadImage('../images/cursor.png');
+        wade.loadImage('../images/sparkle.png');
 
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
         for (var i=0; i < directions.length; i++)
         {
-            wade.loadImage('images/witch_Idle_iso_' + directions[i] + '.png');
-            wade.loadImage('images/witch_Walk_iso_' + directions[i] + '.png');
+            wade.loadImage('../images/witch_Idle_iso_' + directions[i] + '.png');
+            wade.loadImage('../images/witch_Walk_iso_' + directions[i] + '.png');
         }
     };
 
@@ -48,7 +48,7 @@ App = function()
         wade.setClickTolerance(15);
 
         // fill the terrain with grass
-        var tileData = {texture: 'images/grass0.png'};
+        var tileData = {texture: '../images/grass0.png'};
         for (var i=0; i < numTiles.x; i++)
         {
             if (i!=1) {
@@ -60,32 +60,32 @@ App = function()
         }
 
         // add a bit of sand
-        wade.iso.setTile(2, 3, {texture: 'images/sand0.png'});
-        wade.iso.setTransition(2, 3, {texture: 'images/grass0_allSides.png'});
+        wade.iso.setTile(2, 3, {texture: '../images/sand0.png'});
+        wade.iso.setTransition(2, 3, {texture: '../images/grass0_allSides.png'});
 
         // set transitions around the edges
         for (i=1; i < numTiles.x-1; i++)
         {
-            wade.iso.setTransition(i, numTiles.z-1, {texture: 'images/beach.png'});
+            wade.iso.setTransition(i, numTiles.z-1, {texture: '../images/beach.png'});
         }
         for (i=1; i < numTiles.z-1; i++)
         {
-            wade.iso.setTransition(numTiles.x-1, i, {texture: 'images/beach.png', rotation: 1});
+            wade.iso.setTransition(numTiles.x-1, i, {texture: '../images/beach.png', rotation: 1});
         }
         for (i=1; i < numTiles.x-1; i++)
         {
-            wade.iso.setTransition(i, 0, {texture: 'images/beach.png', rotation: 2});
+            wade.iso.setTransition(i, 0, {texture: '../images/beach.png', rotation: 2});
         }
         for (i=1; i < numTiles.z-1; i++)
         {
-            wade.iso.setTransition(0, i, {texture: 'images/beach.png', rotation: 3});
+            wade.iso.setTransition(0, i, {texture: '../images/beach.png', rotation: 3});
         }
 
         // transitions for the corners
-        wade.iso.setTransition(numTiles.x-1, numTiles.z-1, {texture: 'images/beach_corner.png'});
-        wade.iso.setTransition(numTiles.x-1, 0, {texture: 'images/beach_corner.png', rotation: 1});
-        wade.iso.setTransition(0, 0, {texture: 'images/beach_corner.png', rotation: 2});
-        wade.iso.setTransition(0, numTiles.z-1, {texture: 'images/beach_corner.png', rotation: 3});
+        wade.iso.setTransition(numTiles.x-1, numTiles.z-1, {texture: '../images/beach_corner.png'});
+        wade.iso.setTransition(numTiles.x-1, 0, {texture: '../images/beach_corner.png', rotation: 1});
+        wade.iso.setTransition(0, 0, {texture: '../images/beach_corner.png', rotation: 2});
+        wade.iso.setTransition(0, numTiles.z-1, {texture: '../images/beach_corner.png', rotation: 3});
 
         // add daisies
         var numCellsPerTile = wade.iso.getNumCellsPerTile();
@@ -93,15 +93,15 @@ App = function()
         {
             var x = Math.floor(Math.random() * (numTiles.x - 2) * numCellsPerTile) + numCellsPerTile;
             var z = Math.floor(Math.random() * (numTiles.z - 2) * numCellsPerTile) + numCellsPerTile;
-            var detailData = {texture: 'images/daisies' + Math.floor(Math.random() * 4) + '.png'};
-            if (wade.iso.getTileTextureAtCell(x, z) == 'images/grass0.png')
+            var detailData = {texture: '../images/daisies' + Math.floor(Math.random() * 4) + '.png'};
+            if (wade.iso.getTileTextureAtCell(x, z) == '../images/grass0.png')
             {
                 wade.iso.setDetail(x, z, detailData);
             }
         }
 
         // create some plants
-        var plantData = {sprites: {image: 'images/plant.png', scale: 0.4, offset: {y: 0.22}}, collisionMap: [{x: 0, z: 0}]};
+        var plantData = {sprites: {image: '../images/plant.png', scale: 0.4, offset: {y: 0.22}}, collisionMap: [{x: 0, z: 0}]};
         var plantPositions = [{x: 5, z: 5}, {x: 4, z: 9}, {x: 7, z: 4}, {x: 13, z: 6}, {x: 17, z: 13}, {x: 4, z: 16}, {x: 9, z: 17}];
         for (i=0; i < plantPositions.length; i++)
         {
@@ -109,11 +109,11 @@ App = function()
         }
 
         // create a cauldron
-        var cauldronData = {sprites: {image: 'images/cauldron.png', scale: 0.4, offset: {y: 0.3}}, collisionMap: [{x: 0, z: 0}]};
+        var cauldronData = {sprites: {image: '../images/cauldron.png', scale: 0.4, offset: {y: 0.3}}, collisionMap: [{x: 0, z: 0}]};
         wade.iso.createObject(cauldronData, {x: 10, z: 13}, {name: 'cauldron'});
 
         // create some flowers
-        var flowerData = {sprites: {image: 'images/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
+        var flowerData = {sprites: {image: '../images/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
         var flowerPositions = [{x: 5, z: 3}, {x: 8, z: 9}, {x: 12, z: 6}, {x: 16, z: 14}, {x: 5, z: 11}];
         for (i=0; i < flowerPositions.length; i++)
         {
@@ -140,7 +140,7 @@ App = function()
                 sortPoint: {y: 1},
                 animations:
                 {
-                    image: 'images/smoke.png',
+                    image: '../images/smoke.png',
                     numCells: {x: 8, y: 4},
                     looping: true,
                     speed: 10
@@ -154,7 +154,7 @@ App = function()
         //{
         //    sprites:
         //    {
-        //        image: 'images/house.png',
+        //        image: '../images/house.png',
         //        scale: 0.8,
         //        offset: {x: 0.01, y: 0.05},
         //        sortPoint: {y: 0.27}
@@ -173,23 +173,23 @@ App = function()
                 offset: {y: 0.05},
                 animations:
                 [
-                    { name: 'Idle_iso_s',   image: 'images/witch_Idle_iso_s.png',   autoResize: true },
-                    { name: 'Idle_iso_e',   image: 'images/witch_Idle_iso_e.png',   autoResize: true },
-                    { name: 'Idle_iso_n',   image: 'images/witch_Idle_iso_n.png',   autoResize: true },
-                    { name: 'Idle_iso_w',   image: 'images/witch_Idle_iso_w.png',   autoResize: true },
-                    { name: 'Idle_iso_se',  image: 'images/witch_Idle_iso_se.png',  autoResize: true },
-                    { name: 'Idle_iso_sw',  image: 'images/witch_Idle_iso_sw.png',  autoResize: true },
-                    { name: 'Idle_iso_ne',  image: 'images/witch_Idle_iso_ne.png',  autoResize: true },
-                    { name: 'Idle_iso_nw',  image: 'images/witch_Idle_iso_nw.png',  autoResize: true },
-                    { name: 'Walk_iso_e',   image: 'images/witch_Walk_iso_e.png',   autoResize: true,   numCells: {x: 4, y: 4}, looping: true },
-                    { name: 'Walk_iso_n',   image: 'images/witch_Walk_iso_n.png',   autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_w',   image: 'images/witch_Walk_iso_w.png',   autoResize: true,   numCells: {x: 4, y: 4}, looping: true },
-                    { name: 'Walk_iso_s',   image: 'images/witch_Walk_iso_s.png',   autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_se',  image: 'images/witch_Walk_iso_se.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_sw',  image: 'images/witch_Walk_iso_sw.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_ne',  image: 'images/witch_Walk_iso_ne.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_nw',  image: 'images/witch_Walk_iso_nw.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Crouch_iso_ne',image: 'images/witch_Crouch_iso_ne.png',autoResize: true,   numCells: {x: 3, y: 3} }
+                    { name: 'Idle_iso_s',   image: '../images/witch_Idle_iso_s.png',   autoResize: true },
+                    { name: 'Idle_iso_e',   image: '../images/witch_Idle_iso_e.png',   autoResize: true },
+                    { name: 'Idle_iso_n',   image: '../images/witch_Idle_iso_n.png',   autoResize: true },
+                    { name: 'Idle_iso_w',   image: '../images/witch_Idle_iso_w.png',   autoResize: true },
+                    { name: 'Idle_iso_se',  image: '../images/witch_Idle_iso_se.png',  autoResize: true },
+                    { name: 'Idle_iso_sw',  image: '../images/witch_Idle_iso_sw.png',  autoResize: true },
+                    { name: 'Idle_iso_ne',  image: '../images/witch_Idle_iso_ne.png',  autoResize: true },
+                    { name: 'Idle_iso_nw',  image: '../images/witch_Idle_iso_nw.png',  autoResize: true },
+                    { name: 'Walk_iso_e',   image: '../images/witch_Walk_iso_e.png',   autoResize: true,   numCells: {x: 4, y: 4}, looping: true },
+                    { name: 'Walk_iso_n',   image: '../images/witch_Walk_iso_n.png',   autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
+                    { name: 'Walk_iso_w',   image: '../images/witch_Walk_iso_w.png',   autoResize: true,   numCells: {x: 4, y: 4}, looping: true },
+                    { name: 'Walk_iso_s',   image: '../images/witch_Walk_iso_s.png',   autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
+                    { name: 'Walk_iso_se',  image: '../images/witch_Walk_iso_se.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
+                    { name: 'Walk_iso_sw',  image: '../images/witch_Walk_iso_sw.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
+                    { name: 'Walk_iso_ne',  image: '../images/witch_Walk_iso_ne.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
+                    { name: 'Walk_iso_nw',  image: '../images/witch_Walk_iso_nw.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
+                    { name: 'Crouch_iso_ne',image: '../images/witch_Crouch_iso_ne.png',autoResize: true,   numCells: {x: 3, y: 3} }
                 ]
             },
             behaviors: IsoCharacter,
@@ -224,7 +224,7 @@ App = function()
         };
 
         // create a speech bubble
-        speechBubble = new SceneObject(new Sprite('images/callout.png', 3));
+        speechBubble = new SceneObject(new Sprite('../images/callout.png', 3));
         speechBubble.addSprite(new TextSprite('', '16px Verdana', 'black', 'left', 3), {x: -100, y: -30});
         wade.setLayerTransform(3, 0, 0);
 
@@ -262,7 +262,7 @@ App = function()
 
                 // show a particle effect
                 var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-                var animation = new Animation('images/sparkle.png', 8, 4, 30);
+                var animation = new Animation('../images/sparkle.png', 8, 4, 30);
                 sprite.addAnimation('sparkle', animation);
                 sprite.setSize(100, 100);
                 var pos = eventData.object.getPosition();
@@ -393,7 +393,7 @@ App = function()
                 {
                     // show a particle effect
                     var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-                    var animation = new Animation('images/cursor.png', 4, 4, 30);
+                    var animation = new Animation('../images/cursor.png', 4, 4, 30);
                     sprite.addAnimation('cursor', animation);
                     sprite.setSize(100, 50);
                     var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);
