@@ -1,0 +1,66 @@
+{
+	"world": 
+	{
+		"numTiles": 
+		{
+	    	"x": 6,
+	    	"z": 6
+		}
+	},
+	"map": 
+	{
+		"objects": 
+		{
+			"cauldron": 
+			[
+				{
+					"name": "cauldron",
+					"position": {"x": 10, "z": 13}
+				},
+				{
+					"name": "cauldron2",
+					"position": {"x": 2, "z": 5}
+				}
+			],
+			"smoke":
+			[
+				{
+					"name": "smoke",
+					"position": {"x": 14, "z": 12}
+				}
+			]
+		}
+	},
+	"objects": 
+	{
+		"cauldron": 
+		{
+			"sprites": 
+			{
+				"image": "../images/game/cauldron.png",
+				"scale": 0.4,
+				"offset": {"y": 0.3}
+			},
+			"collisionMap": 
+			[
+				{"x": 0, "z": 0}
+			]
+		},
+		"smoke": 
+		{
+			"sprites":
+            {
+                "size": {"x": 90, "y": 120},
+                "offset": {"y": 0.3},
+                "sortPoint": {"y": 1},
+                "animations":
+                {
+                    "image": "../images/game/smoke.png",
+                    "numCells": {"x": 8, "y": 4},
+                    "looping": true,
+                    "speed": 10
+                }
+            }
+		}
+	}
+}

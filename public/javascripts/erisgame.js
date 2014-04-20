@@ -1,15 +1,37 @@
 App = function()
 {
+    // List of TODOs
+    // - Instead of loading every object from JSON with mapDataJson.data.something, 
+    //   create meaningful objects and JSON-loader which loads json to them
+    //   This way we can get rid of numTiles-global variable
+
+    // Global variables
+    // TODO: Ota mallia polyst‰, miten globaalit muuttujat v‰ltet‰‰n
+    var numTiles = {"x" : "0", "z" : "0"} // Default numTiles, will be overridden by JSON
+
+    // Objects
     var witch, speechBubble;
+
+    // Json files
+    var mapDataJson = {};
 
     this.load = function()
     {
+        // *** REQUIRED SCRIPTS
+
         // Loading debug interface
 		wade.preloadScript('debugInterf.js');
 		// Decide will actions ("messages") send to local script or remote server
 		wade.preloadScript('communicationLayer.js');
-	
-		wade.setLoadingImages('../images/game/loading.png');
+
+        // *** JSON
+
+        // Load JSON
+        wade.preloadJson('../json/erismap1.json', mapDataJson);
+
+        // *** IMAGES
+
+        wade.setLoadingImages('../images/game/loading.png');
 
         // load images
         wade.loadImage('../images/game/grass0.png');
@@ -42,21 +64,21 @@ App = function()
 
     this.init = function()
     {
-        // initialize the isometric plugin
-        var numTiles = {x: 6, z: 6};
-        wade.iso.init({numTiles: numTiles, movementDirection: 'both'});
-        wade.setClickTolerance(15);
+        // ** Initialize combat
+        wade.app.startCombat();
 
+        // ** Create level
+    
         // fill the terrain with grass
         var tileData = {texture: '../images/game/grass0.png'};
         for (var i=0; i < numTiles.x; i++)
         {
             if (i!=1) {
-				for (var j=0; j < numTiles.z; j++)
-				{
-					wade.iso.setTile(i, j, tileData);
-				}
-			}
+                for (var j=0; j < numTiles.z; j++)
+                {
+                    wade.iso.setTile(i, j, tileData);
+                }
+            }
         }
 
         // add a bit of sand
@@ -108,9 +130,14 @@ App = function()
             wade.iso.createObject(plantData, plantPositions[i]);
         }
 
-        // create a cauldron
-        var cauldronData = {sprites: {image: '../images/game/cauldron.png', scale: 0.4, offset: {y: 0.3}}, collisionMap: [{x: 0, z: 0}]};
-        wade.iso.createObject(cauldronData, {x: 10, z: 13}, {name: 'cauldron'});
+        // Create cauldrons
+
+        var cauldronDataJson = mapDataJson.data.objects.cauldron;
+        var cauldron = mapDataJson.data.map.objects.cauldron[0]
+        var cauldron2 = mapDataJson.data.map.objects.cauldron[1]
+
+        wade.iso.createObject(cauldronDataJson, cauldron.position, {"name": cauldron.name});
+        wade.iso.createObject(cauldronDataJson, cauldron2.position, {"name": cauldron2.name});
 
         // create some flowers
         var flowerData = {sprites: {image: '../images/game/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
@@ -131,38 +158,9 @@ App = function()
         var numFlowersLeft = flowerPositions.length;
 
         // create some smoke
-        var smokeData =
-        {
-            sprites:
-            {
-                size: {x: 90, y: 120},
-                offset: {y: 0.3},
-                sortPoint: {y: 1},
-                animations:
-                {
-                    image: '../images/game/smoke.png',
-                    numCells: {x: 8, y: 4},
-                    looping: true,
-                    speed: 10
-                }
-            }
-        };
-        wade.iso.createObject(smokeData, {x:11, z: 14});
-
-        // create a house
-        //var houseData =
-        //{
-        //    sprites:
-        //    {
-        //        image: '../images/game/house.png',
-        //        scale: 0.8,
-        //        offset: {x: 0.01, y: 0.05},
-        //        sortPoint: {y: 0.27}
-        //    },
-        //    gridSize: {x: 5, z: 5},
-        //    collisionSize: {x: 5, z: 5}
-        //};
-        //wade.iso.createObject(houseData, {x:14, z: 15});
+        var smokeDataJson = mapDataJson.data.objects.smoke;
+        var smoke1 = mapDataJson.data.map.objects.smoke[0];
+        wade.iso.createObject(smokeDataJson, smoke1.position);
 
         // create a witch
         var witchData =
@@ -409,6 +407,25 @@ App = function()
         }
     };
 
+    // TODO: Move to own file, however it requires creation of object of "game" which holds global information
+    this.startCombat = function() {
+
+        console.log('Start game... starting');
+
+        // Debug: Log JSON
+        console.log('JSON');
+        console.log(mapDataJson);
+        
+        // Read numTiles from JSON and set it to global variable
+        numTiles = mapDataJson.data.world.numTiles;
+
+        // Initialize wade isometric
+        wade.iso.init({numTiles: numTiles, movementDirection: 'both'});
+        wade.setClickTolerance(15);
+
+        console.log('Start game... done!');
+    };
+
 };
 
-//@ sourceURL=iso.js
+//@ sourceURL=erisgame.js
