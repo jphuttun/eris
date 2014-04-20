@@ -18,13 +18,16 @@ Documentation of Eris
 + Git repository: development
 + Push to local git: git commit
 + Push to github: git push origin development
-+ Push to heroku: git XXX
++ Push to heroku: git push staging development:master
 + What: Production test, should be as product like as possible. If tests are ok, code is merged to production
 
 ## Playground
 
 + Web site: erisplayground.heroku.com
 + Git repository: playground
++ Push to local git: git commit
++ Push to github: <no github repository, publish your playground_branch if needed>
++ Push to heroku: git push playground playground_<yourbranch>:master
 + What: You can do here whatever you want
 + Instructions:
 	+ Create new branch from source:
@@ -33,7 +36,7 @@ Documentation of Eris
 		3. Do your changes and commit them to your branch
 		4. No need to push them to github
 		5. Push them to heroku
-		6. Delete your branch when you don't need it anymore: git checkout -D playground_<branchname>
+		6. Delete your branch when you don't need it anymore: git branch -D playground_<branchname>
 
 # Git instructions
 
@@ -47,6 +50,28 @@ Documentation of Eris
 + Create new branch, copy existing files from source branch
 	+ go to branch you want to copy
 	+ git branch -b <branchname>
+
+## Branches
++ Local branches
+	+ How to show local branches:
+		+ git branch <- shows only local branches
+	+ You can have unlimited local branches
+	+ Create new branch for each "feature" or bugfix you are developing
+	+ Branch copies files from other branch
+	+ All branches are in same physical directory. Hidden .git folder has actual files as zipped blobs and when you change branch, it unzips correct branch files to directory
++ Remote branch
+	+ How to show remote branches:
+		+ git branch -a <- shows local and remote branches
+		+ git remote -v <- shows to which remotes local branches point
+	+ Usually remote = github
+	+ Branches that are in github and visible to others
+	+ Master and development are usually remote branches
+	+ Remote branch vs local branch - there is no automatic binding, but you usually configure your local master to point to remote master
+	+ However these are actually two different branches. You can have different code in local master than remote master, but git notices this and tells that your branch is ahead/behind/divergent from remote branch
++ Heroku branches
+	+ Heroku works kind a like github. You can push your code to heroku and even pull it from there if you want
+	+ Heroku branches are remote branches, which point to heroku server
+	+ When you push stuff to these branches, heroku notices it, compiles code and updates heroku server with your code
 
 ## Git merge and rebase
 + Merge
