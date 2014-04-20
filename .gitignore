@@ -1,2 +1,6 @@
 # Mac temp files
 .DS_Store
+
+# Webstorm IDE
+.idea
+.idea/*
