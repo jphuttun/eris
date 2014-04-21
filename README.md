@@ -9,7 +9,7 @@ Documentation of Eris
 + Git repository: master
 + Push to local git: git commit
 + Push to github: git push origin master
-+ Push to heroku: git XXX
++ Push to heroku: git push heroku master:master
 + What: Production code
 
 ## Staging
@@ -27,16 +27,16 @@ Documentation of Eris
 + Git repository: playground
 + Push to local git: git commit
 + Push to github: <no github repository, publish your playground_branch if needed>
-+ Push to heroku: git push playground playground_<yourbranch>:master
++ Push to heroku: git push playground playground_yourbranchname:master
 + What: You can do here whatever you want
 + Instructions:
 	+ Create new branch from source:
 		1. Go to source branch
-		2. git checkout -b playground_<branchname>, for example: playground_test_two_game_layers
+		2. git checkout -b playground_yourbranchname, for example: playground_test_two_game_layers
 		3. Do your changes and commit them to your branch
 		4. No need to push them to github
 		5. Push them to heroku
-		6. Delete your branch when you don't need it anymore: git branch -D playground_<branchname>
+		6. Delete your branch when you don't need it anymore: git branch -D playground_yourbranchname
 
 # Git instructions
 
@@ -81,9 +81,17 @@ Documentation of Eris
 		+ Your code is ready
 		+ You want to merge your code _to_ another branch, for example development
 	+ How it is done
-		1. Go to target branch, for example development
-		2. git merge <yourbranch>
-		3. Solve merge conflicts
+		1. Explanation: Source = your branch, Target = branch you want merge your code to
+		2. Go to Target branch
+		3. git pull
+		4. git merge nameofsourcebranch
+		5. Merge conflicts?
+			+ No?
+				+ Good
+			+ Yes?
+				+ Fix them
+				+ Commit changes
+
 + Rebase
 	+ What is rebase?
 		+ It takes target branch, removes all your commits, puts source commits and then puts your commits on top of that
@@ -92,9 +100,22 @@ Documentation of Eris
 		+ In this case rebase is helpful. It will "stash" your changes to safety, then take everything from development and put your commits on top of that. It might cause merge conflicts which you have to solve
 		+ This way you can solve merge conflicts everytime new code is pushed to development instead of solving them all once when you merge your code to development
 	+ How it is gone
-		1. Google: git rebase
-		2. Do it
-		3. Ready :)
+		1. Explanation: Source = your branch, Target = branch you want merge your code to in future
+		2. Go to Target branch
+		3. git pull
+		4. Go to Source branch
+		5. git rebase nameoftargetbranch
+		6. Rebase conflicts?
+			+ No?
+				+ Good
+			+ Yes?
+				+ Fix them one by one
+				+ DO NOT COMMIT between fixes, only after if needed
+		7. Go to Target branch
+		8. git merge nameofsourcebranch
+		9. Deal with merge conflicts if any
+
+		
 
 ## Git policy
 
@@ -107,7 +128,7 @@ Documentation of Eris
 			+ For example: Fix bug in player selection
 	+ Optional
 		+ One empty line
-		+ Longer explanation what you did (code changes are easily to see from github, no need to explain what files were changed, but _why_)
+		+ Longer explanation what you did (code changes are easily to see from github, no need to explain what files were changed, but why)
 	+ Fix bug, not fixed, fixes
 		+ Don't use past tense: Fixed bug...
 		+ Don't use persons: I fixed bug...
