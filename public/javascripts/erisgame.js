@@ -10,7 +10,7 @@ App = function()
     var numTiles = {"x" : "0", "z" : "0"} // Default numTiles, will be overridden by JSON
 
     // Objects
-    var witch, speechBubble;
+    var witch, derrin, speechBubble, hero = 1;
 
     // Json files
     var mapDataJson = {};
@@ -59,6 +59,12 @@ App = function()
         {
             wade.loadImage('../images/game/witch_Idle_iso_' + directions[i] + '.png');
             wade.loadImage('../images/game/witch_Walk_iso_' + directions[i] + '.png');
+        }
+		
+        for (var i=0; i < directions.length; i++)
+        {
+            wade.loadImage('../images/game/derrin_Idle_iso_' + directions[i] + '.png');
+            wade.loadImage('../images/game/derrin_Walk_iso_' + directions[i] + '.png');
         }
     };
 
@@ -163,6 +169,38 @@ App = function()
         wade.iso.createObject(smokeDataJson, smoke1.position);
 
         // create a witch
+        var derrinData =
+        {
+            sprites:
+            {
+                scale: 0.57,
+                offset: {y: 0.05},
+                animations:
+                [
+                    { name: 'Idle_iso_s',   image: '../images/game/derrin_Idle_iso_s.png',   autoResize: true },
+                    { name: 'Idle_iso_e',   image: '../images/game/derrin_Idle_iso_e.png',   autoResize: true },
+                    { name: 'Idle_iso_n',   image: '../images/game/derrin_Idle_iso_n.png',   autoResize: true },
+                    { name: 'Idle_iso_w',   image: '../images/game/derrin_Idle_iso_w.png',   autoResize: true },
+                    { name: 'Idle_iso_se',  image: '../images/game/derrin_Idle_iso_se.png',  autoResize: true },
+                    { name: 'Idle_iso_sw',  image: '../images/game/derrin_Idle_iso_sw.png',  autoResize: true },
+                    { name: 'Idle_iso_ne',  image: '../images/game/derrin_Idle_iso_ne.png',  autoResize: true },
+                    { name: 'Idle_iso_nw',  image: '../images/game/derrin_Idle_iso_nw.png',  autoResize: true },
+                    { name: 'Walk_iso_e',   image: '../images/game/derrin_Walk_iso_e.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_n',   image: '../images/game/derrin_Walk_iso_n.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_w',   image: '../images/game/derrin_Walk_iso_w.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_s',   image: '../images/game/derrin_Walk_iso_s.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_se',  image: '../images/game/derrin_Walk_iso_se.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_sw',  image: '../images/game/derrin_Walk_iso_sw.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_ne',  image: '../images/game/derrin_Walk_iso_ne.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                    { name: 'Walk_iso_nw',  image: '../images/game/derrin_Walk_iso_nw.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
+                 ]
+            },
+            behaviors: IsoCharacter,
+            collisionMap: [{x: 0, z: 0}]
+        };
+        derrin = wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'derrin'}).getBehavior();
+		
+        // create a witch
         var witchData =
         {
             sprites:
@@ -194,7 +232,18 @@ App = function()
             collisionMap: [{x: 0, z: 0}]
         };
         witch = wade.iso.createObject(witchData, {x: 13, z: 18}, {name: 'witch'}).getBehavior();
-
+		
+            var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
+            flower.onClick = function()
+            {
+                if (witch.canMove)
+                {
+                    witch.goToObject(this);
+                }
+                return true;
+            };
+            wade.addEventListener(flower, 'onClick');		
+		
         // add a talk function to our witch
         witch.talk = function(text, time)
         {
@@ -380,31 +429,70 @@ App = function()
     // move the witch
     this.onClick = function(eventData)
     {
-        if (witch.canMove)
-        {
-            var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
-            var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
-            var numCells = wade.iso.getNumCells();
-            if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
-            {
-                if (witch.setDestination(cellCoords))
-                {
-                    // show a particle effect
-                    var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-                    var animation = new Animation('../images/game/cursor.png', 4, 4, 30);
-                    sprite.addAnimation('cursor', animation);
-                    sprite.setSize(100, 50);
-                    var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);
-                    wade.addSceneObject(cursor);
-                    sprite.pushToBack();
-                    cursor.playAnimation('cursor');
-                    cursor.onAnimationEnd = function()
-                    {
-                        wade.removeSceneObject(cursor);
-                    };
-                }
-            }
-        }
+		var coordsAreSet = false;
+		var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+        var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+		var posWitch = wade.getSceneObject('witch').getPosition();
+		var cellWitchCoords = wade.iso.getCellCoordinates(posWitch.x, posWitch.y);
+		var posDerrin = wade.getSceneObject('derrin').getPosition();
+		var cellDerrinCoords = wade.iso.getCellCoordinates(posDerrin.x, posDerrin.y);
+		//console.log(worldCoords);
+		//console.log(cellCoords);
+		//console.log(posWitch);
+		//console.log(cellWitchCoords);
+		//console.log(posDerrin);
+		//console.log(cellDerrinCoords);
+		//console.log(hero);
+		
+		if (cellWitchCoords.x == cellCoords.x && cellWitchCoords.z == cellCoords.z) {
+			hero=1;
+			//console.log('Hero1');
+		} 
+		if (cellDerrinCoords.x == cellCoords.x && cellDerrinCoords.z == cellCoords.z) {
+			hero=2;
+			//console.log('Hero2');
+		} 
+				
+		if (witch.canMove)
+		{
+			var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+			var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+			var numCells = wade.iso.getNumCells();
+			if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
+			{
+				if (hero == 1) 
+				{
+					if (witch.setDestination(cellCoords))
+					{
+						coordsAreSet=true;
+					}
+				}
+			}
+		}
+		if (hero == 2) {
+			if (derrin.setDestination(cellCoords))
+			{
+				coordsAreSet=true;
+			}
+		}
+		
+		// if reasonable cell is Clicked, then showing particle effect cursor animation
+		if (coordsAreSet==true)
+		{
+			// show a particle effect - CURSOR CLICK ANIMATION
+			var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
+			var animation = new Animation('../images/game/cursor.png', 4, 4, 30);
+			sprite.addAnimation('cursor', animation);
+			sprite.setSize(100, 50);
+			var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);
+			wade.addSceneObject(cursor);
+			sprite.pushToBack();
+			cursor.playAnimation('cursor');
+			cursor.onAnimationEnd = function()
+			{
+				wade.removeSceneObject(cursor);
+			};
+		}
     };
 
     // TODO: Move to own file, however it requires creation of object of "game" which holds global information
