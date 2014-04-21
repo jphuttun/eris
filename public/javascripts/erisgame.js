@@ -73,12 +73,12 @@ App = function()
         var tileData = {texture: '../images/game/grass0.png'};
         for (var i=0; i < numTiles.x; i++)
         {
-            if (i!=1) {
-                for (var j=0; j < numTiles.z; j++)
-                {
-                    wade.iso.setTile(i, j, tileData);
-                }
-            }
+            //if (i!=1) {
+				for (var j=0; j < numTiles.z; j++)
+				{
+					wade.iso.setTile(i, j, tileData);
+				}
+			//}
         }
 
         // add a bit of sand
