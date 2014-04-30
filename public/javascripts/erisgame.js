@@ -11,6 +11,7 @@ App = function()
 
     // Objects
     var witch, derrin, speechBubble, hero = 1;
+	var chars = []; // Player, allied and enemy characters
 
     // Json files
     var mapDataJson = {};
@@ -18,7 +19,7 @@ App = function()
     this.load = function()
     {
         // *** REQUIRED SCRIPTS
-
+				
         // Loading debug interface
 		wade.preloadScript('debugInterf.js');
 		// Decide will actions ("messages") send to local script or remote server
@@ -145,30 +146,7 @@ App = function()
         wade.iso.createObject(cauldronDataJson, cauldron.position, {"name": cauldron.name});
         wade.iso.createObject(cauldronDataJson, cauldron2.position, {"name": cauldron2.name});
 
-        // create some flowers
-        var flowerData = {sprites: {image: '../images/game/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
-        var flowerPositions = [{x: 5, z: 3}, {x: 8, z: 9}, {x: 12, z: 6}, {x: 16, z: 14}, {x: 5, z: 11}];
-        for (i=0; i < flowerPositions.length; i++)
-        {
-            var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
-            flower.onClick = function()
-            {
-                if (witch.canMove)
-                {
-                    witch.goToObject(this);
-                }
-                return true;
-            };
-            wade.addEventListener(flower, 'onClick');
-        }
-        var numFlowersLeft = flowerPositions.length;
-
-        // create some smoke
-        var smokeDataJson = mapDataJson.data.objects.smoke;
-        var smoke1 = mapDataJson.data.map.objects.smoke[0];
-        wade.iso.createObject(smokeDataJson, smoke1.position);
-
-        // create a witch
+        // create a Derrin
         var derrinData =
         {
             sprites:
@@ -193,14 +171,17 @@ App = function()
                     { name: 'Walk_iso_sw',  image: '../images/game/derrin_Walk_iso_sw.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
                     { name: 'Walk_iso_ne',  image: '../images/game/derrin_Walk_iso_ne.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
                     { name: 'Walk_iso_nw',  image: '../images/game/derrin_Walk_iso_nw.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                 ]
+                    { name: 'Crouch_iso_ne',image: '../images/game/witch_Crouch_iso_ne.png', autoResize: true,   numCells: {x: 3, y: 3} }                 
+				 ]
             },
             behaviors: IsoCharacter,
             collisionMap: [{x: 0, z: 0}]
         };
-        derrin = wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'derrin'}).getBehavior();
-		
-        // create a witch
+        //derrin = wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'derrin'}).getBehavior();
+        chars.push(wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
+		chars[chars.length-1].canMove = true;
+
+       // create a witch
         var witchData =
         {
             sprites:
@@ -231,26 +212,53 @@ App = function()
             behaviors: IsoCharacter,
             collisionMap: [{x: 0, z: 0}]
         };
-        witch = wade.iso.createObject(witchData, {x: 13, z: 18}, {name: 'witch'}).getBehavior();
+        chars.push(wade.iso.createObject(witchData, {x: 13, z: 18}, {name: 'chars1'}).getBehavior());
+		chars[chars.length-1].canMove = true;
+		
+        // create some flowers
+        var flowerData = {sprites: {image: '../images/game/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
+        var flowerPositions = [{x: 5, z: 3}, {x: 8, z: 9}, {x: 12, z: 6}, {x: 16, z: 14}, {x: 5, z: 11}];
+        for (i=0; i < flowerPositions.length; i++)
+        {
+            var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
+            flower.onClick = function()
+            {
+                if (chars[hero].canMove)
+                {
+                    chars[hero].goToObject(this);
+                }
+                return true;
+            };
+            wade.addEventListener(flower, 'onClick');
+        }
+        var numFlowersLeft = flowerPositions.length;
+
+        // create some smoke
+        var smokeDataJson = mapDataJson.data.objects.smoke;
+        var smoke1 = mapDataJson.data.map.objects.smoke[0];
+        wade.iso.createObject(smokeDataJson, smoke1.position);
+
+		
+        witch = wade.iso.createObject(witchData, {x: 14, z: 18}, {name: 'witch'}).getBehavior();
 		
             var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
             flower.onClick = function()
             {
-                if (witch.canMove)
+                if (chars[hero].canMove)
                 {
-                    witch.goToObject(this);
+                    chars[hero].goToObject(this);
                 }
                 return true;
             };
             wade.addEventListener(flower, 'onClick');		
 		
         // add a talk function to our witch
-        witch.talk = function(text, time)
+        chars[hero].talk = function(text, time)
         {
             // if we're talking already, cancel the talk timeout
-            if (witch.talkTimeout)
+            if (chars[hero].talkTimeout)
             {
-                clearTimeout(witch.talkTimeout);
+                clearTimeout(chars[hero].talkTimeout);
             }
 
             // set text
@@ -263,10 +271,10 @@ App = function()
             }
 
             // set a timeout to hide the bubble
-            witch.talkTimeout = setTimeout(function()
+            chars[hero].talkTimeout = setTimeout(function()
             {
                 wade.removeSceneObject(speechBubble);
-                witch.talkTimeout = 0;
+                chars[hero].talkTimeout = 0;
             }, time);
         };
 
@@ -276,7 +284,7 @@ App = function()
         wade.setLayerTransform(3, 0, 0);
 
         // do something upon reaching an object
-        witch.owner.onObjectReached = function(eventData)
+        chars[hero].owner.onObjectReached = function(eventData)
         {
             if (eventData.object.getName() == 'cauldron')
             {
@@ -299,13 +307,13 @@ App = function()
 				//var puhuFraasi = this.serverResponse.data.testString;
 				
 				//witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?#'+puhuFraasi, 4000);
-				witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?', 4000);
-                witch.canMove = true;
+				chars[hero].talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?', 4000);
+                chars[hero].canMove = true;
             }
             if (eventData.object.isFlower)
             {
-                witch.owner.playAnimation('Crouch_iso_ne', 'ping-pong');
-                witch.canMove = false;
+                chars[hero].owner.playAnimation('Crouch_iso_ne', 'ping-pong');
+                chars[hero].canMove = false;
 
                 // show a particle effect
                 var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
@@ -330,12 +338,12 @@ App = function()
         };
 
         // What to do when the witch is finished playing an animation
-        witch.owner.onAnimationEnd = function(eventData)
+        chars[hero].owner.onAnimationEnd = function(eventData)
         {
             if (eventData.name == 'Crouch_iso_ne')
             {
                 // face south
-                witch.setDirection('s');
+                chars[hero].setDirection('s');
 
                 // if the bubble isn't near the center of the screen, move the camera
                 var text = (numFlowersLeft? 'Excellent! Only ' + numFlowersLeft + '\nmore to go!' : "Great job!\nThat's all of them.\nThanks so much!");
@@ -354,17 +362,17 @@ App = function()
                     wade.app.onCameraMoveComplete = function()
                     {
                         // say something
-                        witch.talk(text, 3000);
+                        chars[hero].talk(text, 3000);
                         // feel free to move again
-                        witch.canMove = true;
+                        chars[hero].canMove = true;
                     };
                 }
                 else
                 {
                     // say something
-                    witch.talk(text, 3000);
+                    chars[hero].talk(text, 3000);
                     // feel free to move again
-                    witch.canMove = true;
+                    chars[hero].canMove = true;
                 }
             }
         };
@@ -377,14 +385,14 @@ App = function()
         // start moving after 500 milliseconds
         setTimeout(function()
         {
-            witch.goToObject('cauldron');
+            chars[hero].goToObject('cauldron');
         }, 500);
 
         // define what we want to do for every frame
         wade.setMainLoopCallback(function()
         {
             // move the speech bubble so it's always in the same position relative to the witch
-            var pos = wade.getSceneObject('witch').getPosition();
+            var pos = wade.getSceneObject('chars'+hero).getPosition();
             pos.y -= 90;
             pos.x -= 20;
             pos = wade.worldPositionToScreen(wade.iso.getObjectsLayerId(), pos);
@@ -432,47 +440,35 @@ App = function()
 		var coordsAreSet = false;
 		var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
         var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
-		var posWitch = wade.getSceneObject('witch').getPosition();
-		var cellWitchCoords = wade.iso.getCellCoordinates(posWitch.x, posWitch.y);
-		var posDerrin = wade.getSceneObject('derrin').getPosition();
-		var cellDerrinCoords = wade.iso.getCellCoordinates(posDerrin.x, posDerrin.y);
-		//console.log(worldCoords);
-		//console.log(cellCoords);
-		//console.log(posWitch);
-		//console.log(cellWitchCoords);
-		//console.log(posDerrin);
-		//console.log(cellDerrinCoords);
-		//console.log(hero);
+	
 		
-		if (cellWitchCoords.x == cellCoords.x && cellWitchCoords.z == cellCoords.z) {
-			hero=1;
-			//console.log('Hero1');
-		} 
-		if (cellDerrinCoords.x == cellCoords.x && cellDerrinCoords.z == cellCoords.z) {
-			hero=2;
-			//console.log('Hero2');
-		} 
-				
-		if (witch.canMove)
+		// Activation of selected character
+		var charPosition;
+		var charCellCoords;
+		for (var i=0; i<chars.length; i=i+1) {
+			charPosition = wade.getSceneObject('chars'+i).getPosition();
+			charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
+			if (charCellCoords.x == cellCoords.x && charCellCoords.z == cellCoords.z) {
+				hero=i;
+			} 			
+		}
+		
+		// Moving selected character
+		if (hero >= 0) 
 		{
-			var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
-			var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
-			var numCells = wade.iso.getNumCells();
-			if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
+			if (chars[hero].canMove)
 			{
-				if (hero == 1) 
+				var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+				var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+				var numCells = wade.iso.getNumCells();
+				if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
 				{
-					if (witch.setDestination(cellCoords))
+					//if (derrin.setDestination(cellCoords))
+					if (chars[hero].setDestination(cellCoords))
 					{
 						coordsAreSet=true;
 					}
 				}
-			}
-		}
-		if (hero == 2) {
-			if (derrin.setDestination(cellCoords))
-			{
-				coordsAreSet=true;
 			}
 		}
 		
