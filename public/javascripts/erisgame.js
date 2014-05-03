@@ -11,6 +11,7 @@ App = function()
 
     // Objects
     var witch, derrin, speechBubble, hero = 1;
+	var myCharHandler;
 	var chars = []; // Player, allied and enemy characters
 
     // Json files
@@ -76,6 +77,8 @@ App = function()
         // ** Initialize combat
         wade.app.startCombat();
 
+		myCharHandler = new charsActions();
+		
         // ** Create level
     
         // fill the terrain with grass
@@ -225,10 +228,13 @@ App = function()
             var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
             flower.onClick = function()
             {
-                if (chars[hero].canMove)
+                myCharHandler.walkToObject(chars[hero],this);
+				/*
+				if (chars[hero].canMove)
                 {
                     chars[hero].goToObject(this);
                 }
+				*/
                 return true;
             };
             wade.addEventListener(flower, 'onClick');
@@ -246,10 +252,7 @@ App = function()
             var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
             flower.onClick = function()
             {
-                if (chars[hero].canMove)
-                {
-                    chars[hero].goToObject(this);
-                }
+				myCharHandler.walkToObject(chars[hero],this);
                 return true;
             };
             wade.addEventListener(flower, 'onClick');		
