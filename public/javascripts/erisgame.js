@@ -24,6 +24,8 @@ App = function()
 		wade.preloadScript('debugInterf.js');
 		// Decide will actions ("messages") send to local script or remote server
 		wade.preloadScript('communicationLayer.js');
+		// Includes all actions that are loaded during init and characters can execute
+		wade.preloadScript('charsActions.js');
 
         // *** JSON
 
