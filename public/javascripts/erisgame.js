@@ -11,7 +11,7 @@ App = function()
 
     // Objects
     var witch, derrin, speechBubble, hero = 1;
-	var myCharHandler;
+	var charsHandler;
 	var chars = []; // Player, allied and enemy characters
 
     // Json files
@@ -77,7 +77,7 @@ App = function()
         // ** Initialize combat
         wade.app.startCombat();
 
-		myCharHandler = new charsActions();
+		charsHandler = new charsActions();
 		
         // ** Create level
     
@@ -228,13 +228,7 @@ App = function()
             var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
             flower.onClick = function()
             {
-                myCharHandler.walkToObject(chars[hero],this);
-				/*
-				if (chars[hero].canMove)
-                {
-                    chars[hero].goToObject(this);
-                }
-				*/
+                charsHandler.walkToObject(chars[hero],this);
                 return true;
             };
             wade.addEventListener(flower, 'onClick');
@@ -250,39 +244,21 @@ App = function()
         witch = wade.iso.createObject(witchData, {x: 14, z: 18}, {name: 'witch'}).getBehavior();
 		
             var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
-            flower.onClick = function()
+            // What will happen, if object is clicked
+			flower.onClick = function()
             {
-				myCharHandler.walkToObject(chars[hero],this);
+				// If flower is clicked, then our selected hero character walk to object
+				charsHandler.walkToObject(chars[hero],this);
                 return true;
             };
             wade.addEventListener(flower, 'onClick');		
 		
-        // add a talk function to our witch
+		// Attaching talk function
         chars[hero].talk = function(text, time)
         {
-            // if we're talking already, cancel the talk timeout
-            if (chars[hero].talkTimeout)
-            {
-                clearTimeout(chars[hero].talkTimeout);
-            }
-
-            // set text
-            speechBubble.getSprite(1).setText(text);
-
-            // add bubble to the scene
-            if (!speechBubble.isInScene())
-            {
-                wade.addSceneObject(speechBubble);
-            }
-
-            // set a timeout to hide the bubble
-            chars[hero].talkTimeout = setTimeout(function()
-            {
-                wade.removeSceneObject(speechBubble);
-                chars[hero].talkTimeout = 0;
-            }, time);
-        };
-
+            speechBubble=charsHandler.talk(chars[hero],speechBubble,text,time);
+        };		
+		
         // create a speech bubble
         speechBubble = new SceneObject(new Sprite('../images/game/callout.png', 3));
         speechBubble.addSprite(new TextSprite('', '16px Verdana', 'black', 'left', 3), {x: -100, y: -30});
@@ -291,95 +267,17 @@ App = function()
         // do something upon reaching an object
         chars[hero].owner.onObjectReached = function(eventData)
         {
-            if (eventData.object.getName() == 'cauldron')
-            {
-                // Tässä kohdassa ladataan tietoa serveriltä ja lähetetään tietoa serverille (esim. peliobjective saavutettu ja sitä
-				// vastaavat tiedot ladataan serveriltä, samalla kun lähetetään serverille tiedot kentän edistymisestä tiettyyn pisteeseen)
-				
-				// Serveri voisi palauttaa esim. alta löytyvän JSON tiedoston
-				
-				//   {
-				//		"testString" : "We reach the object! Should we continue attack or secure this location?",
-				//		"testScore" : 42
-				//	}
-				
-				//this.serverResponse = {};
-				//var dataToSend = "ReachObject¤cauldron";
-				//var url = 'http://www.example.com/doSomething.php?';
-				//url = url + encodeURIComponent(dataToSend);
-				//wade.preloadJson(url, this.serverResponse, 0, 1);
-				
-				//var puhuFraasi = this.serverResponse.data.testString;
-				
-				//witch.talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?#'+puhuFraasi, 4000);
-				chars[hero].talk('I need to find 5 Marigold\nFlowers for my potion.\nWill you help me?', 4000);
-                chars[hero].canMove = true;
-            }
-            if (eventData.object.isFlower)
-            {
-                chars[hero].owner.playAnimation('Crouch_iso_ne', 'ping-pong');
-                chars[hero].canMove = false;
+            // Mainly picking flowers, but there is also event when reached cauldron
+			numFlowersLeft=charsHandler.reachObjectOccurEvents(chars[hero], eventData, numFlowersLeft);
 
-                // show a particle effect
-                var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-                var animation = new Animation('../images/game/sparkle.png', 8, 4, 30);
-                sprite.addAnimation('sparkle', animation);
-                sprite.setSize(100, 100);
-                var pos = eventData.object.getPosition();
-                var sparkle = new SceneObject(sprite, 0, pos.x, pos.y);
-                wade.addSceneObject(sparkle);
-                sparkle.playAnimation('sparkle');
-                sparkle.onAnimationEnd = function()
-                {
-                    wade.removeSceneObject(sparkle);
-                };
-
-                setTimeout(function()
-                {
-                    wade.iso.deleteObject(eventData.object);
-                    numFlowersLeft--;
-                }, 300);
-            }
         };
 
         // What to do when the witch is finished playing an animation
         chars[hero].owner.onAnimationEnd = function(eventData)
         {
-            if (eventData.name == 'Crouch_iso_ne')
-            {
-                // face south
-                chars[hero].setDirection('s');
+			
+			charsHandler.afterAnimation(chars[hero], speechBubble, numFlowersLeft, eventData);
 
-                // if the bubble isn't near the center of the screen, move the camera
-                var text = (numFlowersLeft? 'Excellent! Only ' + numFlowersLeft + '\nmore to go!' : "Great job!\nThat's all of them.\nThanks so much!");
-                if (numFlowersLeft == 4)
-                {
-                    text = 'You can pan and zoom\naround the map';
-                }
-                var pos = speechBubble.getPosition();
-                var screenWidth = wade.getScreenWidth();
-                var screenHeight = wade.getScreenHeight();
-                if (Math.abs(pos.x) - screenWidth / 2 < screenWidth / 4 || Math.abs(pos.y) - screenHeight / 2 < screenHeight / 4)
-                {
-                    pos = wade.screenPositionToWorld(wade.iso.getObjectsLayerId(), pos);
-                    pos.z = wade.getCameraPosition().z;
-                    wade.moveCamera(pos, 300);
-                    wade.app.onCameraMoveComplete = function()
-                    {
-                        // say something
-                        chars[hero].talk(text, 3000);
-                        // feel free to move again
-                        chars[hero].canMove = true;
-                    };
-                }
-                else
-                {
-                    // say something
-                    chars[hero].talk(text, 3000);
-                    // feel free to move again
-                    chars[hero].canMove = true;
-                }
-            }
         };
 
         // set initial camera position
