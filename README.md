@@ -46,10 +46,11 @@ Documentation of Eris
 	+ git branch <- shows local branches
 	+ git branch -a <- shows local and remote branches
 + Change branch
-	+ git checkout <branchname>
+	+ git checkout branchname_where_you_want_to_move
 + Create new branch, copy existing files from source branch
-	+ go to branch you want to copy
-	+ git branch -b <branchname>
+	+ go to branch you want to copy (by using checkout command)
+	+ git branch new_branchname
+	+ git checkout new_branchname
 
 ## Branches
 + Local branches
