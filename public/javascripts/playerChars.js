@@ -13,20 +13,19 @@ Initialize game
 
 */
 
-var resData;
+var resData = [];
 
-playerChars = function(playerType) 
-{
- 
-	resData = this.loadPlayerData(playerType);
+playerChars = function(playerType, ind) {
+	
+	resData[ind] = this.loadPlayerData(playerType);
 		
 };  // end PlayerChars
 
 
-playerChars.prototype.getWadeResourceData = function() {
+playerChars.prototype.getWadeResourceData = function(ind) {
 	
-	console.log(resData);
-	return resData;
+	console.log(resData[ind]);
+	return resData[ind];
 	
 };
 	

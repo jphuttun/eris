@@ -82,8 +82,8 @@ App = function()
         wade.app.startCombat();
 
 		charsHandler = new charsActions();
-		playData = new playerChars('derrin');
-		playData1 = new playerChars('witch');
+		playData = new playerChars('derrin',0);
+		playData1 = new playerChars('witch',1);
 		
         // ** Create level
     
@@ -158,10 +158,10 @@ App = function()
         wade.iso.createObject(cauldronDataJson, cauldron2.position, {"name": cauldron2.name});
 
         //derrin = wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'derrin'}).getBehavior();
-        chars.push(wade.iso.createObject(playData.getWadeResourceData(), {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
+        chars.push(wade.iso.createObject(playData.getWadeResourceData(0), {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
 		chars[chars.length-1].canMove = true;
 
-        chars.push(wade.iso.createObject(playData1.getWadeResourceData(), {x: 13, z: 18}, {name: 'chars1'}).getBehavior()); // Witch
+        chars.push(wade.iso.createObject(playData1.getWadeResourceData(1), {x: 13, z: 18}, {name: 'chars1'}).getBehavior()); // Witch
 		chars[chars.length-1].canMove = true;
 		
         // create some flowers
