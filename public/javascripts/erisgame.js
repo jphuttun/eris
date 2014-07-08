@@ -13,6 +13,8 @@ App = function()
     var witch, derrin, speechBubble, hero = 1;
 	var charsHandler;
 	var chars = []; // Player, allied and enemy characters
+	var playData; // Playerdata
+	var playData1; 
 
     // Json files
     var mapDataJson = {};
@@ -27,6 +29,8 @@ App = function()
 		wade.preloadScript('communicationLayer.js');
 		// Includes all actions that are loaded during init and characters can execute
 		wade.preloadScript('charsActions.js');
+		// Includes player characters and their resources (like picture loaders, sound loader etc.)
+		wade.preloadScript('playerChars.js');
 
         // *** JSON
 
@@ -78,6 +82,8 @@ App = function()
         wade.app.startCombat();
 
 		charsHandler = new charsActions();
+		playData = new playerChars('derrin');
+		playData1 = new playerChars('witch');
 		
         // ** Create level
     
@@ -151,73 +157,11 @@ App = function()
         wade.iso.createObject(cauldronDataJson, cauldron.position, {"name": cauldron.name});
         wade.iso.createObject(cauldronDataJson, cauldron2.position, {"name": cauldron2.name});
 
-        // create a Derrin
-        var derrinData =
-        {
-            sprites:
-            {
-                scale: 0.57,
-                offset: {y: 0.05},
-                animations:
-                [
-                    { name: 'Idle_iso_s',   image: '../images/game/derrin_Idle_iso_s.png',   autoResize: true },
-                    { name: 'Idle_iso_e',   image: '../images/game/derrin_Idle_iso_e.png',   autoResize: true },
-                    { name: 'Idle_iso_n',   image: '../images/game/derrin_Idle_iso_n.png',   autoResize: true },
-                    { name: 'Idle_iso_w',   image: '../images/game/derrin_Idle_iso_w.png',   autoResize: true },
-                    { name: 'Idle_iso_se',  image: '../images/game/derrin_Idle_iso_se.png',  autoResize: true },
-                    { name: 'Idle_iso_sw',  image: '../images/game/derrin_Idle_iso_sw.png',  autoResize: true },
-                    { name: 'Idle_iso_ne',  image: '../images/game/derrin_Idle_iso_ne.png',  autoResize: true },
-                    { name: 'Idle_iso_nw',  image: '../images/game/derrin_Idle_iso_nw.png',  autoResize: true },
-                    { name: 'Walk_iso_e',   image: '../images/game/derrin_Walk_iso_e.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_n',   image: '../images/game/derrin_Walk_iso_n.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_w',   image: '../images/game/derrin_Walk_iso_w.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_s',   image: '../images/game/derrin_Walk_iso_s.png',   autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_se',  image: '../images/game/derrin_Walk_iso_se.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_sw',  image: '../images/game/derrin_Walk_iso_sw.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_ne',  image: '../images/game/derrin_Walk_iso_ne.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Walk_iso_nw',  image: '../images/game/derrin_Walk_iso_nw.png',  autoResize: true,   numCells: {x: 4, y: 2}, looping: true },
-                    { name: 'Crouch_iso_ne',image: '../images/game/witch_Crouch_iso_ne.png', autoResize: true,   numCells: {x: 3, y: 3} }                 
-				 ]
-            },
-            behaviors: IsoCharacter,
-            collisionMap: [{x: 0, z: 0}]
-        };
         //derrin = wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'derrin'}).getBehavior();
-        chars.push(wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
+        chars.push(wade.iso.createObject(playData.getWadeResourceData(), {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
 		chars[chars.length-1].canMove = true;
 
-       // create a witch
-        var witchData =
-        {
-            sprites:
-            {
-                scale: 0.57,
-                offset: {y: 0.05},
-                animations:
-                [
-                    { name: 'Idle_iso_s',   image: '../images/game/witch_Idle_iso_s.png',   autoResize: true },
-                    { name: 'Idle_iso_e',   image: '../images/game/witch_Idle_iso_e.png',   autoResize: true },
-                    { name: 'Idle_iso_n',   image: '../images/game/witch_Idle_iso_n.png',   autoResize: true },
-                    { name: 'Idle_iso_w',   image: '../images/game/witch_Idle_iso_w.png',   autoResize: true },
-                    { name: 'Idle_iso_se',  image: '../images/game/witch_Idle_iso_se.png',  autoResize: true },
-                    { name: 'Idle_iso_sw',  image: '../images/game/witch_Idle_iso_sw.png',  autoResize: true },
-                    { name: 'Idle_iso_ne',  image: '../images/game/witch_Idle_iso_ne.png',  autoResize: true },
-                    { name: 'Idle_iso_nw',  image: '../images/game/witch_Idle_iso_nw.png',  autoResize: true },
-                    { name: 'Walk_iso_e',   image: '../images/game/witch_Walk_iso_e.png',   autoResize: true,   numCells: {x: 4, y: 4}, looping: true },
-                    { name: 'Walk_iso_n',   image: '../images/game/witch_Walk_iso_n.png',   autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_w',   image: '../images/game/witch_Walk_iso_w.png',   autoResize: true,   numCells: {x: 4, y: 4}, looping: true },
-                    { name: 'Walk_iso_s',   image: '../images/game/witch_Walk_iso_s.png',   autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_se',  image: '../images/game/witch_Walk_iso_se.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_sw',  image: '../images/game/witch_Walk_iso_sw.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_ne',  image: '../images/game/witch_Walk_iso_ne.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Walk_iso_nw',  image: '../images/game/witch_Walk_iso_nw.png',  autoResize: true,   numCells: {x: 8, y: 2}, looping: true },
-                    { name: 'Crouch_iso_ne',image: '../images/game/witch_Crouch_iso_ne.png',autoResize: true,   numCells: {x: 3, y: 3} }
-                ]
-            },
-            behaviors: IsoCharacter,
-            collisionMap: [{x: 0, z: 0}]
-        };
-        chars.push(wade.iso.createObject(witchData, {x: 13, z: 18}, {name: 'chars1'}).getBehavior());
+        chars.push(wade.iso.createObject(playData1.getWadeResourceData(), {x: 13, z: 18}, {name: 'chars1'}).getBehavior()); // Witch
 		chars[chars.length-1].canMove = true;
 		
         // create some flowers
@@ -241,7 +185,7 @@ App = function()
         wade.iso.createObject(smokeDataJson, smoke1.position);
 
 		
-        witch = wade.iso.createObject(witchData, {x: 14, z: 18}, {name: 'witch'}).getBehavior();
+        //witch = wade.iso.createObject(witchData, {x: 14, z: 18}, {name: 'witch'}).getBehavior();
 		
             var flower = wade.iso.createObject(flowerData, flowerPositions[i], {isFlower: true});
             // What will happen, if object is clicked
