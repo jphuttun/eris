@@ -10,11 +10,16 @@ App = function()
     var numTiles = {"x" : "0", "z" : "0"} // Default numTiles, will be overridden by JSON
 
     // Objects
+	var debugType = 0; // 0 = Console logging
+	var isDebugging = 1; // 0 = false, 1 = true
+	
     var witch, derrin, speechBubble, hero = 1;
 	var charsHandler;
 	var chars = []; // Player, allied and enemy characters
 	var playData; // Playerdata
-	var playData1; 
+	var playData1;
+
+	var debugClass;
 
     // Json files
     var mapDataJson = {};
@@ -31,7 +36,7 @@ App = function()
 		wade.preloadScript('charsActions.js');
 		// Includes player characters and their resources (like picture loaders, sound loader etc.)
 		wade.preloadScript('playerChars.js');
-
+		
         // *** JSON
 
         // Load JSON
@@ -80,10 +85,12 @@ App = function()
     {
         // ** Initialize combat
         wade.app.startCombat();
-
+		
+		debugClass = new debugInterf(); // For debugging
+		
 		charsHandler = new charsActions();
-		playData = new playerChars('derrin');
-		playData1 = new playerChars('witch');
+		playData = new playerChars('derrin', isDebugging, debugType);
+		playData1 = new playerChars('witch', isDebugging, debugType);
 		
         // ** Create level
     
