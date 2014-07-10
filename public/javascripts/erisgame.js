@@ -19,8 +19,6 @@ App = function()
 	var playData; // Playerdata
 	var playData1;
 
-	var debugClass;
-
     // Json files
     var mapDataJson = {};
 
@@ -29,7 +27,7 @@ App = function()
         // *** REQUIRED SCRIPTS
 				
         // Loading debug interface
-		wade.preloadScript('debugInterf.js');
+		wade.preloadScript('debugger.js');
 		// Decide will actions ("messages") send to local script or remote server
 		wade.preloadScript('communicationLayer.js');
 		// Includes all actions that are loaded during init and characters can execute
@@ -85,8 +83,6 @@ App = function()
     {
         // ** Initialize combat
         wade.app.startCombat();
-		
-		debugClass = new debugInterf(); // For debugging
 		
 		charsHandler = new charsActions();
 		playData = new playerChars('derrin', isDebugging, debugType);

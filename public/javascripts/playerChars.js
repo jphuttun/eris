@@ -19,7 +19,6 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.charType = playerType; // Type of character that has created
 	this.debugType = debugType; // Debuging type => 0 = Console logging
 	this.isDebugging = isDebugging; // 1=Debugging true, 0 = false
-	this.debugging = new debugInterf(); // OBS! TYPERÄSTI TEHTY - EI VARMAAN TARKOITUS, ETTÄ JOKA INSTANSSILLE LUODAAN DEBUG LUOKKA ERIKSEEN!	
 	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
@@ -44,7 +43,9 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	// Return Wade resource data attached in character
 	this.getWadeResourceData = function() {
 		
-		if (this.isDebugging==1) this.debugging.debugMsg(_resData, this.debugType);
+		if (this.isDebugging === 1) {
+            Debugger.log(_resData, this.debugType);
+        }
 		return _resData;
 		
 	}
@@ -124,14 +125,14 @@ playerChars.prototype.loadPlayerData = function(pType) {
         };
 	}
 	
-	if (this.isDebugging==1) {
-		this.debugging.debugMsg('CharacterData:', this.debugType);
-		this.debugging.debugMsg(playerData, this.debugType);
+	if (this.isDebugging === 1) {
+        Debugger.log('CharacterData:', this.debugType);
+        Debugger.log(playerData, this.debugType);
 	}
 	
 	return playerData;
 	
-};	
+};
 
 // For Chrome Debugging
 //@ sourceURL=PlayerChars.js
