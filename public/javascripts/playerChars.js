@@ -44,7 +44,7 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.getWadeResourceData = function() {
 		
 		if (this.isDebugging === 1) {
-            Debugger.log(_resData, this.debugType);
+            Debugger.log(_resData, this.debugType,'CharacterData - getWadeResourceData');
         }
 		return _resData;
 		
@@ -126,8 +126,7 @@ playerChars.prototype.loadPlayerData = function(pType) {
 	}
 	
 	if (this.isDebugging === 1) {
-        Debugger.log('CharacterData:', this.debugType);
-        Debugger.log(playerData, this.debugType);
+        Debugger.log(playerData, this.debugType, 'CharacterData - loadPlayerData:');
 	}
 	
 	return playerData;

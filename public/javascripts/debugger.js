@@ -8,11 +8,15 @@ tulostumaan konsoliin, tiedostoon, kikkareeseen X runtime debuggaukseen yms.
 */
 
 var Debugger = {
-    log: function(msg, msgType) {
+    log: function(msg, msgType, caption) {
         msgType = msgType || 0; // If msgType is not given => 0 = Console logging
-
+		caption = caption || ""
+		
         switch (msgType) {
             case 0:
+				if (caption != "") {
+					console.log(caption);
+				}
                 console.log(msg);
                 break;
             case 1:
@@ -28,6 +32,9 @@ var Debugger = {
                 console.log('unrecognized level number ?');
                 break;
             default:
+				if (caption != "") {
+					console.log(caption);
+				}			
                 console.log(msg); // In case wrong number, console logging is default
                 break;
         }	// end switch
