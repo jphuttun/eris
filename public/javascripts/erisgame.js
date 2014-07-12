@@ -16,9 +16,11 @@ App = function()
     var witch, derrin, speechBubble, hero = 1;
 	var charsHandler;
 	var chars = []; // Player, allied and enemy characters
-	var playData; // Playerdata
+	var playData = []; // Playerdata
 	var playData1;
-
+	
+	var self = this;
+	
     // Json files
     var mapDataJson = {};
 
@@ -64,6 +66,9 @@ App = function()
         wade.loadImage('../images/game/cursor.png');
         wade.loadImage('../images/game/sparkle.png');
 
+        wade.loadImage('../images/game/fullIcon.jpg');
+        wade.loadImage('../images/game/emptyIcon.jpg');		
+		
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
         for (var i=0; i < directions.length; i++)
@@ -85,8 +90,14 @@ App = function()
         wade.app.startCombat();
 		
 		charsHandler = new charsActions();
-		playData = new playerChars('derrin', isDebugging, debugType);
+		
+		// ** Creating player characters
+		playData1 = new playerChars('derrin', isDebugging, debugType);
+		playData.push(playData1);
+		
 		playData1 = new playerChars('witch', isDebugging, debugType);
+		playData.push(playData1);
+		
 		
         // ** Create level
     
@@ -161,10 +172,10 @@ App = function()
         wade.iso.createObject(cauldronDataJson, cauldron2.position, {"name": cauldron2.name});
 
         //derrin = wade.iso.createObject(derrinData, {x: 13, z: 11}, {name: 'derrin'}).getBehavior();
-        chars.push(wade.iso.createObject(playData.getWadeResourceData(), {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
+        chars.push(wade.iso.createObject(playData[0].getWadeResourceData(), {x: 13, z: 11}, {name: 'chars0'}).getBehavior()); // Derrin
 		chars[chars.length-1].canMove = true;
 
-        chars.push(wade.iso.createObject(playData1.getWadeResourceData(), {x: 13, z: 18}, {name: 'chars1'}).getBehavior());
+        chars.push(wade.iso.createObject(playData[1].getWadeResourceData(), {x: 13, z: 18}, {name: 'chars1'}).getBehavior()); // Witch
 		chars[chars.length-1].canMove = true;
 		
         // create some flowers
@@ -211,6 +222,43 @@ App = function()
         speechBubble.addSprite(new TextSprite('', '16px Verdana', 'black', 'left', 3), {x: -100, y: -30});
         wade.setLayerTransform(3, 0, 0);
 
+        // create UI-button
+        this.UIbutton = new SceneObject(new Sprite('../images/game/emptyIcon.jpg', 3),0,100,100);
+		this.UIbutton2 = new SceneObject(new Sprite('../images/game/fullIcon.jpg', 3),0,100,100);
+		// add image to the scene
+		if (!this.UIbutton.isInScene())
+		{
+			wade.addSceneObject(this.UIbutton2);
+			this.UIbutton2.setVisible(false);
+			wade.addSceneObject(this.UIbutton);
+			Debugger.log('luotiin potikka');
+		}
+		
+        wade.setLayerTransform(4, 0, 0);
+
+
+		this.UIbutton.onClick = function()
+		{
+			Debugger.log('Täällä');
+			//wade.removeSceneObject(this);
+			this.setVisible(false);
+			self.UIbutton2.setVisible(true);
+			//wade.fadeOutLayer(1,500);
+		};
+
+		this.UIbutton2.onClick = function()
+		{
+			Debugger.log('Tuolla');
+			//wade.removeSceneObject(this);
+			this.setVisible(false);
+			self.UIbutton.setVisible(true);
+			//wade.fadeOutLayer(1,500);
+		};		
+		
+		// set our text object to listen for onClick events
+        wade.addEventListener(this.UIbutton, 'onClick');
+        wade.addEventListener(this.UIbutton2, 'onClick');		
+		
         // do something upon reaching an object
         chars[hero].owner.onObjectReached = function(eventData)
         {
@@ -232,6 +280,8 @@ App = function()
         pos.z = 1;
         wade.setCameraPosition(pos);
 
+		//this.loadStomach();
+		
         // start moving after 500 milliseconds
         setTimeout(function()
         {
@@ -287,6 +337,7 @@ App = function()
     // move the witch
     this.onClick = function(eventData)
     {
+	
 		var coordsAreSet = false;
 		var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
         var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
@@ -298,7 +349,7 @@ App = function()
 		for (var i=0; i<chars.length; i=i+1) {
 			charPosition = wade.getSceneObject('chars'+i).getPosition();
 			charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
-			if (charCellCoords.x == cellCoords.x && charCellCoords.z == cellCoords.z) {
+			if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
 				hero=i;
 			} 			
 		}
@@ -359,6 +410,24 @@ App = function()
 
         console.log('Start game... done!');
     };
+	
+	this.loadStomach = function() {
+		// choose a size for the stomach - we're calculating a size that depends on the screen size
+        var size = Math.min(Math.min(wade.getContainerWidth(), wade.getContainerHeight()) / 3, 100);
+
+		// create a background sprite and position it correctly
+		var full = new Sprite('../images/game/fullIcon.jpg',wade.app.UI_LAYER);
+		full.setSize(size, size);
+		pos = {x: 0, y: wade.getScreenHeight()/2 - size / 2};
+
+        // now create a scene object with that background sprite, and a MiniMap behavior
+		stomach = new SceneObject(full, 0, pos.x, pos.y);
+        stomach.setAlignment('left', 'bottom');
+		var empty = new Sprite('../images/game/emptyIcon.jpg',wade.app.UI_LAYER);
+		empty.setSize(size,size);
+		stomach.addSprite(empty);
+		wade.addSceneObject(stomach);
+	};	// end loadStomach
 
 };
 
