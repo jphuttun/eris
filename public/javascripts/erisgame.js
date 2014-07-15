@@ -19,6 +19,8 @@ App = function()
 	var playData = []; // Playerdata
 	var playData1; // Helper variable for playData
 	
+	var userInt; // User Interface class
+	
 	var self = this;
 	
     // Json files
@@ -36,6 +38,8 @@ App = function()
 		wade.preloadScript('charsActions.js');
 		// Includes player characters and their resources (like picture loaders, sound loader etc.)
 		wade.preloadScript('playerChars.js');
+		// Includes User Interface in game)
+		wade.preloadScript('playerUI.js');
 		
         // *** JSON
 
@@ -66,8 +70,8 @@ App = function()
         wade.loadImage('../images/game/cursor.png');
         wade.loadImage('../images/game/sparkle.png');
 
-        wade.loadImage('../images/game/fullIcon.jpg');
-        wade.loadImage('../images/game/emptyIcon.jpg');		
+        wade.loadImage('../images/game/fullIcon.jpg'); // Loading UI images
+        wade.loadImage('../images/game/emptyIcon.jpg'); // Loading UI images
 		
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
@@ -220,44 +224,10 @@ App = function()
         // create a speech bubble
         speechBubble = new SceneObject(new Sprite('../images/game/callout.png', 3));
         speechBubble.addSprite(new TextSprite('', '16px Verdana', 'black', 'left', 3), {x: -100, y: -30});
-        wade.setLayerTransform(3, 0, 0);
-
-        // create UI-button
-        this.UIbutton = new SceneObject(new Sprite('../images/game/emptyIcon.jpg', 3),0,100,100);
-		this.UIbutton2 = new SceneObject(new Sprite('../images/game/fullIcon.jpg', 3),0,100,100);
-		// add image to the scene
-		if (!this.UIbutton.isInScene())
-		{
-			wade.addSceneObject(this.UIbutton2);
-			this.UIbutton2.setVisible(false);
-			wade.addSceneObject(this.UIbutton);
-			Debugger.log('luotiin potikka');
-		}
+        wade.setLayerTransform(3, 0, 0);		
 		
-        wade.setLayerTransform(4, 0, 0);
-
-
-		this.UIbutton.onClick = function()
-		{
-			Debugger.log('T‰‰ll‰');
-			//wade.removeSceneObject(this);
-			this.setVisible(false);
-			self.UIbutton2.setVisible(true);
-			//wade.fadeOutLayer(1,500);
-		};
-
-		this.UIbutton2.onClick = function()
-		{
-			Debugger.log('Tuolla');
-			//wade.removeSceneObject(this);
-			this.setVisible(false);
-			self.UIbutton.setVisible(true);
-			//wade.fadeOutLayer(1,500);
-		};		
-		
-		// set our text object to listen for onClick events
-        wade.addEventListener(this.UIbutton, 'onClick');
-        wade.addEventListener(this.UIbutton2, 'onClick');		
+		// Create UI
+		userInt = new playerUI(isDebugging, debugType);
 		
         // do something upon reaching an object
         chars[hero].owner.onObjectReached = function(eventData)

@@ -8,36 +8,43 @@ tulostumaan konsoliin, tiedostoon, kikkareeseen X runtime debuggaukseen yms.
 */
 
 var Debugger = {
-    log: function(msg, msgType, caption) {
-        msgType = msgType || 0; // If msgType is not given => 0 = Console logging
-		caption = caption || ""
+    log: function(msg, isLogged, msgType, caption) {
+        
+		//console.log(isLogged);
+		//isLogged = isLogged || 1;
 		
-        switch (msgType) {
-            case 0:
-				if (caption != "") {
-					console.log(caption);
-				}
-                console.log(msg);
-                break;
-            case 1:
-                // You debug type code here
-                console.log('unrecognized level number ?');
-                break;
-            case 2:
-                // You debug type code here
-                console.log('unrecognized level number ?');
-                break;
-            case 3:
-                // You debug type code here
-                console.log('unrecognized level number ?');
-                break;
-            default:
-				if (caption != "") {
-					console.log(caption);
-				}			
-                console.log(msg); // In case wrong number, console logging is default
-                break;
-        }	// end switch
+		if (isLogged === 1) {
+		
+			msgType = msgType || 0; // If msgType is not given => 0 = Console logging
+			caption = caption || "";
+			
+			switch (msgType) {
+				case 0:
+					if (caption != "") {
+						console.log(caption);
+					}
+					console.log(msg);
+					break;
+				case 1:
+					// You debug type code here
+					console.log('unrecognized level number ?');
+					break;
+				case 2:
+					// You debug type code here
+					console.log('unrecognized level number ?');
+					break;
+				case 3:
+					// You debug type code here
+					console.log('unrecognized level number ?');
+					break;
+				default:
+					if (caption != "") {
+						console.log(caption);
+					}			
+					console.log(msg); // In case wrong number, console logging is default
+					break;
+			}	// end switch
+		}
     }
 };
 
