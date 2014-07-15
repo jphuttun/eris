@@ -17,7 +17,7 @@ App = function()
 	var charsHandler;
 	var chars = []; // Player, allied and enemy characters
 	var playData = []; // Playerdata
-	var playData1;
+	var playData1; // Helper variable for playData
 	
 	var self = this;
 	
