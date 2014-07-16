@@ -312,53 +312,58 @@ App = function()
 		var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
         var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
 	
+		// UI-mode is set to targeting - meaning that you don't select other characters to activate or move
+		if (userInt.isTargeting === true) {
 		
-		// Activation of selected character
-		var charPosition;
-		var charCellCoords;
-		for (var i=0; i<chars.length; i=i+1) {
-			charPosition = wade.getSceneObject('chars'+i).getPosition();
-			charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
-			if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
-				hero=i;
-			} 			
-		}
+		} else {
 		
-		// Moving selected character
-		if (hero >= 0) 
-		{
-			if (chars[hero].canMove)
+			// Activation of selected character
+			var charPosition;
+			var charCellCoords;
+			for (var i=0; i<chars.length; i=i+1) {
+				charPosition = wade.getSceneObject('chars'+i).getPosition();
+				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
+				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
+					hero=i;
+				} 			
+			}
+			
+			// Moving selected character
+			if (hero >= 0) 
 			{
-				var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
-				var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
-				var numCells = wade.iso.getNumCells();
-				if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
+				if (chars[hero].canMove)
 				{
-					//if (derrin.setDestination(cellCoords))
-					if (chars[hero].setDestination(cellCoords))
+					var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+					var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+					var numCells = wade.iso.getNumCells();
+					if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
 					{
-						coordsAreSet=true;
+						//if (derrin.setDestination(cellCoords))
+						if (chars[hero].setDestination(cellCoords))
+						{
+							coordsAreSet=true;
+						}
 					}
 				}
 			}
-		}
-		
-		// if reasonable cell is Clicked, then showing particle effect cursor animation
-		if (coordsAreSet==true)
-		{
-			// show a particle effect - CURSOR CLICK ANIMATION
-			var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-			var animation = new Animation('../images/game/cursor.png', 4, 4, 30);
-			sprite.addAnimation('cursor', animation);
-			sprite.setSize(100, 50);
-			var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);
-			wade.addSceneObject(cursor);
-			sprite.pushToBack();
-			cursor.playAnimation('cursor');
-			cursor.onAnimationEnd = function()
+			
+			// if reasonable cell is Clicked, then showing particle effect cursor animation
+			if (coordsAreSet==true)
 			{
-				wade.removeSceneObject(cursor);
-			};
+				// show a particle effect - CURSOR CLICK ANIMATION
+				var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
+				var animation = new Animation('../images/game/cursor.png', 4, 4, 30);
+				sprite.addAnimation('cursor', animation);
+				sprite.setSize(100, 50);
+				var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);
+				wade.addSceneObject(cursor);
+				sprite.pushToBack();
+				cursor.playAnimation('cursor');
+				cursor.onAnimationEnd = function()
+				{
+					wade.removeSceneObject(cursor);
+				};
+			}
 		}
     };
 
@@ -380,24 +385,6 @@ App = function()
 
         console.log('Start game... done!');
     };
-	
-	this.loadStomach = function() {
-		// choose a size for the stomach - we're calculating a size that depends on the screen size
-        var size = Math.min(Math.min(wade.getContainerWidth(), wade.getContainerHeight()) / 3, 100);
-
-		// create a background sprite and position it correctly
-		var full = new Sprite('../images/game/fullIcon.jpg',wade.app.UI_LAYER);
-		full.setSize(size, size);
-		pos = {x: 0, y: wade.getScreenHeight()/2 - size / 2};
-
-        // now create a scene object with that background sprite, and a MiniMap behavior
-		stomach = new SceneObject(full, 0, pos.x, pos.y);
-        stomach.setAlignment('left', 'bottom');
-		var empty = new Sprite('../images/game/emptyIcon.jpg',wade.app.UI_LAYER);
-		empty.setSize(size,size);
-		stomach.addSprite(empty);
-		wade.addSceneObject(stomach);
-	};	// end loadStomach
 
 };
 
