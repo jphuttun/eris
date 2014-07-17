@@ -312,14 +312,22 @@ App = function()
 		var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
         var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
 	
+		var charPosition;
+		var charCellCoords;
+	
 		// UI-mode is set to targeting - meaning that you don't select other characters to activate or move
 		if (userInt.isTargeting === true) {
-		
+			// Checking, is any character in cell that clicked
+			for (var i=0; i<chars.length; i=i+1) {
+				charPosition = wade.getSceneObject('chars'+i).getPosition();
+				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
+				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
+					Debugger.log('chars'+i,isDebugging,debugType,'Stub: We try to shoot at:');
+				} 			
+			}
 		} else {
 		
 			// Activation of selected character
-			var charPosition;
-			var charCellCoords;
 			for (var i=0; i<chars.length; i=i+1) {
 				charPosition = wade.getSceneObject('chars'+i).getPosition();
 				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
