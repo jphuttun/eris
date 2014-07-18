@@ -323,6 +323,9 @@ App = function()
 				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
 				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
 					Debugger.log('chars'+i,isDebugging,debugType,'Stub: We try to shoot at:');
+					
+					// UI-text info
+					userInt.textsprite1.setText('Stub: We try to shoot at: chars'+i);					
 				} 			
 			}
 		} else {
@@ -333,6 +336,9 @@ App = function()
 				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
 				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
 					hero=i;
+					
+					// UI-text info
+					userInt.textsprite1.setText('Activated character: chars'+i);
 				} 			
 			}
 			

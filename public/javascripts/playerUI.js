@@ -35,6 +35,11 @@ function playerUI(isDebugging, debugType) { // Constructor
 	this.UIbutton.setAlignment('left', 'top');
 	this.UIbutton2.setAlignment('left', 'top');
 	
+	// create Text objects
+	this.textsprite1 = new TextSprite('UI-text1', '48px Arial', 'blue', 'right',5);
+    this.textobj1 = new SceneObject(this.textsprite1);
+	wade.addSceneObject(this.textobj1);
+	
 	// add image to the scene
 	if (!this.UIbutton.isInScene())
 	{
@@ -53,7 +58,8 @@ function playerUI(isDebugging, debugType) { // Constructor
 		this.setVisible(false);
 		self.UIbutton2.setVisible(true);
 		self.isTargeting = true;
-		Debugger.log('Button1-on',self.isD, self.debugT, self.isTargeting);		
+		Debugger.log('Button1-on',self.isD, self.debugT, self.isTargeting);
+		self.textsprite1.setText('Targeting is on!');
 		//wade.fadeOutLayer(1,500);
 		
 		return true; // This stops event propagation - return true lopettaa klikkausjatkumon, sillä muuten painaisu rekisteröitäisiin myös alemmilla layereillä!
@@ -65,6 +71,7 @@ function playerUI(isDebugging, debugType) { // Constructor
 		self.UIbutton.setVisible(true);
 		self.isTargeting = false;
 		Debugger.log('Button1-off',self.isD, self.debugT, self.isTargeting);
+		self.textsprite1.setText('Targeting is off!');
 	
 		return true; // This stops event propagation - return true lopettaa klikkausjatkumon, sillä muuten painaisu rekisteröitäisiin myös alemmilla layereillä!
 	};		
