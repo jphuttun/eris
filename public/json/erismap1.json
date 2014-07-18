@@ -37,7 +37,7 @@
 		{
 			"sprites": 
 			{
-				"image": "../images/game/cauldron.png",
+				"image": "images/game/cauldron.png",
 				"scale": 0.4,
 				"offset": {"y": 0.3}
 			},
@@ -55,7 +55,7 @@
                 "sortPoint": {"y": 1},
                 "animations":
                 {
-                    "image": "../images/game/smoke.png",
+                    "image": "images/game/smoke.png",
                     "numCells": {"x": 8, "y": 4},
                     "looping": true,
                     "speed": 10

@@ -28,63 +28,67 @@ App = function()
 
     this.load = function()
     {
+        // *** CONFIGURE BASE PATH (/ means actually /public/)
+        wade.setBasePath('/');
+        console.log('Base path set as: ' + wade.getBasePath());
+
         // *** REQUIRED SCRIPTS
 				
         // Loading debug interface
-		wade.preloadScript('debugger.js');
+		wade.loadScript('javascripts/debugger.js');
 		// Decide will actions ("messages") send to local script or remote server
-		wade.preloadScript('communicationLayer.js');
+		wade.loadScript('javascripts/communicationLayer.js');
 		// Includes all actions that are loaded during init and characters can execute
-		wade.preloadScript('charsActions.js');
+		wade.loadScript('javascripts/charsActions.js');
 		// Includes player characters and their resources (like picture loaders, sound loader etc.)
-		wade.preloadScript('playerChars.js');
+		wade.loadScript('javascripts/playerChars.js');
 		// Includes User Interface in game)
-		wade.preloadScript('playerUI.js');
+		wade.loadScript('javascripts/playerUI.js');
 		
         // *** JSON
 
         // Load JSON
-        wade.preloadJson('../json/erismap1.json', mapDataJson);
+        wade.preloadJson('json/erismap1.json', mapDataJson);
 
         // *** IMAGES
 
-        wade.setLoadingImages('../images/game/loading.png');
+        wade.setLoadingImages('images/game/loading.png');
 
         // load images
-        wade.loadImage('../images/game/grass0.png');
-        wade.loadImage('../images/game/sand0.png');
-        wade.loadImage('../images/game/grass0_allSides.png');
-        wade.loadImage('../images/game/daisies0.png');
-        wade.loadImage('../images/game/daisies1.png');
-        wade.loadImage('../images/game/daisies2.png');
-        wade.loadImage('../images/game/daisies3.png');
-        wade.loadImage('../images/game/plant.png');
-        wade.loadImage('../images/game/cauldron.png');
-        wade.loadImage('../images/game/flower.png');
-        wade.loadImage('../images/game/smoke.png');
-        wade.loadImage('../images/game/house.png');
-        wade.loadImage('../images/game/callout.png');
-        wade.loadImage('../images/game/witch_Crouch_iso_ne.png');
-        wade.loadImage('../images/game/beach.png');
-        wade.loadImage('../images/game/beach_corner.png');
-        wade.loadImage('../images/game/cursor.png');
-        wade.loadImage('../images/game/sparkle.png');
+        wade.loadImage('images/game/grass0.png');
+        wade.loadImage('images/game/sand0.png');
+        wade.loadImage('images/game/grass0_allSides.png');
+        wade.loadImage('images/game/daisies0.png');
+        wade.loadImage('images/game/daisies1.png');
+        wade.loadImage('images/game/daisies2.png');
+        wade.loadImage('images/game/daisies3.png');
+        wade.loadImage('images/game/plant.png');
+        wade.loadImage('images/game/cauldron.png');
+        wade.loadImage('images/game/flower.png');
+        wade.loadImage('images/game/smoke.png');
+        wade.loadImage('images/game/house.png');
+        wade.loadImage('images/game/callout.png');
+        wade.loadImage('images/game/witch_Crouch_iso_ne.png');
+        wade.loadImage('images/game/beach.png');
+        wade.loadImage('images/game/beach_corner.png');
+        wade.loadImage('images/game/cursor.png');
+        wade.loadImage('images/game/sparkle.png');
 
-        wade.loadImage('../images/game/fullIcon.jpg'); // Loading UI images
-        wade.loadImage('../images/game/emptyIcon.jpg'); // Loading UI images
+        wade.loadImage('images/game/fullIcon.jpg'); // Loading UI images
+        wade.loadImage('images/game/emptyIcon.jpg'); // Loading UI images
 		
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
         for (var i=0; i < directions.length; i++)
         {
-            wade.loadImage('../images/game/witch_Idle_iso_' + directions[i] + '.png');
-            wade.loadImage('../images/game/witch_Walk_iso_' + directions[i] + '.png');
+            wade.loadImage('images/game/witch_Idle_iso_' + directions[i] + '.png');
+            wade.loadImage('images/game/witch_Walk_iso_' + directions[i] + '.png');
         }
 		
         for (var i=0; i < directions.length; i++)
         {
-            wade.loadImage('../images/game/derrin_Idle_iso_' + directions[i] + '.png');
-            wade.loadImage('../images/game/derrin_Walk_iso_' + directions[i] + '.png');
+            wade.loadImage('images/game/derrin_Idle_iso_' + directions[i] + '.png');
+            wade.loadImage('images/game/derrin_Walk_iso_' + directions[i] + '.png');
         }
     };
 
@@ -106,7 +110,7 @@ App = function()
         // ** Create level
     
         // fill the terrain with grass
-        var tileData = {texture: '../images/game/grass0.png'};
+        var tileData = {texture: 'images/game/grass0.png'};
         for (var i=0; i < numTiles.x; i++)
         {
             //if (i!=1) {
@@ -118,32 +122,32 @@ App = function()
         }
 
         // add a bit of sand
-        wade.iso.setTile(2, 3, {texture: '../images/game/sand0.png'});
-        wade.iso.setTransition(2, 3, {texture: '../images/game/grass0_allSides.png'});
+        wade.iso.setTile(2, 3, {texture: 'images/game/sand0.png'});
+        wade.iso.setTransition(2, 3, {texture: 'images/game/grass0_allSides.png'});
 
         // set transitions around the edges
         for (i=1; i < numTiles.x-1; i++)
         {
-            wade.iso.setTransition(i, numTiles.z-1, {texture: '../images/game/beach.png'});
+            wade.iso.setTransition(i, numTiles.z-1, {texture: 'images/game/beach.png'});
         }
         for (i=1; i < numTiles.z-1; i++)
         {
-            wade.iso.setTransition(numTiles.x-1, i, {texture: '../images/game/beach.png', rotation: 1});
+            wade.iso.setTransition(numTiles.x-1, i, {texture: 'images/game/beach.png', rotation: 1});
         }
         for (i=1; i < numTiles.x-1; i++)
         {
-            wade.iso.setTransition(i, 0, {texture: '../images/game/beach.png', rotation: 2});
+            wade.iso.setTransition(i, 0, {texture: 'images/game/beach.png', rotation: 2});
         }
         for (i=1; i < numTiles.z-1; i++)
         {
-            wade.iso.setTransition(0, i, {texture: '../images/game/beach.png', rotation: 3});
+            wade.iso.setTransition(0, i, {texture: 'images/game/beach.png', rotation: 3});
         }
 
         // transitions for the corners
-        wade.iso.setTransition(numTiles.x-1, numTiles.z-1, {texture: '../images/game/beach_corner.png'});
-        wade.iso.setTransition(numTiles.x-1, 0, {texture: '../images/game/beach_corner.png', rotation: 1});
-        wade.iso.setTransition(0, 0, {texture: '../images/game/beach_corner.png', rotation: 2});
-        wade.iso.setTransition(0, numTiles.z-1, {texture: '../images/game/beach_corner.png', rotation: 3});
+        wade.iso.setTransition(numTiles.x-1, numTiles.z-1, {texture: 'images/game/beach_corner.png'});
+        wade.iso.setTransition(numTiles.x-1, 0, {texture: 'images/game/beach_corner.png', rotation: 1});
+        wade.iso.setTransition(0, 0, {texture: 'images/game/beach_corner.png', rotation: 2});
+        wade.iso.setTransition(0, numTiles.z-1, {texture: 'images/game/beach_corner.png', rotation: 3});
 
         // add daisies
         var numCellsPerTile = wade.iso.getNumCellsPerTile();
@@ -151,15 +155,15 @@ App = function()
         {
             var x = Math.floor(Math.random() * (numTiles.x - 2) * numCellsPerTile) + numCellsPerTile;
             var z = Math.floor(Math.random() * (numTiles.z - 2) * numCellsPerTile) + numCellsPerTile;
-            var detailData = {texture: '../images/game/daisies' + Math.floor(Math.random() * 4) + '.png'};
-            if (wade.iso.getTileTextureAtCell(x, z) == '../images/game/grass0.png')
+            var detailData = {texture: 'images/game/daisies' + Math.floor(Math.random() * 4) + '.png'};
+            if (wade.iso.getTileTextureAtCell(x, z) == 'images/game/grass0.png')
             {
                 wade.iso.setDetail(x, z, detailData);
             }
         }
 
         // create some plants
-        var plantData = {sprites: {image: '../images/game/plant.png', scale: 0.4, offset: {y: 0.22}}, collisionMap: [{x: 0, z: 0}]};
+        var plantData = {sprites: {image: 'images/game/plant.png', scale: 0.4, offset: {y: 0.22}}, collisionMap: [{x: 0, z: 0}]};
         var plantPositions = [{x: 5, z: 5}, {x: 4, z: 9}, {x: 7, z: 4}, {x: 13, z: 6}, {x: 17, z: 13}, {x: 4, z: 16}, {x: 9, z: 17}];
         for (i=0; i < plantPositions.length; i++)
         {
@@ -183,7 +187,7 @@ App = function()
 		chars[chars.length-1].canMove = true;
 		
         // create some flowers
-        var flowerData = {sprites: {image: '../images/game/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
+        var flowerData = {sprites: {image: 'images/game/flower.png', scale: 0.4, offset: {y: 0.4}}, interactionOffset: {x: -1, z: 0}};
         var flowerPositions = [{x: 5, z: 3}, {x: 8, z: 9}, {x: 12, z: 6}, {x: 16, z: 14}, {x: 5, z: 11}];
         for (i=0; i < flowerPositions.length; i++)
         {
@@ -222,7 +226,7 @@ App = function()
         };		
 		
         // create a speech bubble
-        speechBubble = new SceneObject(new Sprite('../images/game/callout.png', 3));
+        speechBubble = new SceneObject(new Sprite('images/game/callout.png', 3));
         speechBubble.addSprite(new TextSprite('', '16px Verdana', 'black', 'left', 3), {x: -100, y: -30});
         wade.setLayerTransform(3, 0, 0);		
 		
@@ -366,7 +370,7 @@ App = function()
 			{
 				// show a particle effect - CURSOR CLICK ANIMATION
 				var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-				var animation = new Animation('../images/game/cursor.png', 4, 4, 30);
+				var animation = new Animation('images/game/cursor.png', 4, 4, 30);
 				sprite.addAnimation('cursor', animation);
 				sprite.setSize(100, 50);
 				var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);

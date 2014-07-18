@@ -90,7 +90,7 @@ charsActions.prototype.reachObjectOccurEvents = function(heroCharacter, eventDat
 charsActions.prototype.particleEffect = function(eventData) {
 	// show a particle effect
 	var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
-	var animation = new Animation('../images/game/sparkle.png', 8, 4, 30);
+	var animation = new Animation('images/game/sparkle.png', 8, 4, 30);
 	sprite.addAnimation('sparkle', animation);
 	sprite.setSize(100, 100);
 	var pos = eventData.object.getPosition();
