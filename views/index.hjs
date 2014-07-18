@@ -9,7 +9,7 @@
     <title>{{title}}</title>
 
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script src="javascripts/wade11/wade_1.1.js"></script>
+    <script src="javascripts/wade133/wade_1.3.3.js"></script>
     <script src="javascripts/wadeiso11/wade.iso_1.1.js"></script>
 
     

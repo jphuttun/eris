@@ -26,8 +26,8 @@ function playerUI(isDebugging, debugType) { // Constructor
 	
 	// create UI-button
 		
-	var uisprite = new Sprite('../images/game/emptyIcon.jpg', 5);
-	var uisprite2 = new Sprite('../images/game/fullIcon.jpg', 5);
+	var uisprite = new Sprite('images/game/emptyIcon.jpg', 5);
+	var uisprite2 = new Sprite('images/game/fullIcon.jpg', 5);
 	
 	this.UIbutton = new SceneObject(uisprite,0,wade.getScreenWidth(),wade.getScreenHeight());
 	this.UIbutton2 = new SceneObject(uisprite2,0,wade.getScreenWidth(),wade.getScreenHeight());
