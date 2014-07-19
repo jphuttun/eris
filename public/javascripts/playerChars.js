@@ -20,6 +20,10 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.debugType = debugType; // Debuging type => 0 = Console logging
 	this.isDebugging = isDebugging; // 1=Debugging true, 0 = false
 	
+	// *** PUBLIC MEMBERS - Character properties ***
+	this.orders = 3; // Default orders that character have - change to json loader afterwards!
+	this.energy = 25; // Default energy that character have - change to json loader afterwards!
+	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
 	

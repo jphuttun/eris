@@ -356,11 +356,19 @@ App = function()
 					var numCells = wade.iso.getNumCells();
 					if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
 					{
-						//if (derrin.setDestination(cellCoords))
-						if (chars[hero].setDestination(cellCoords))
-						{
-							coordsAreSet=true;
-						}
+						// We check, is it possible to move further (lack of orders, movement points etc.)
+						// First we get our character coordinates
+						charPosition = wade.getSceneObject('chars'+hero).getPosition();
+						charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);
+						// Then we check is movement possible
+						//if (playData[hero].moveCharacter(charCellCoords.x, charCellCoords.y, cellCoords.x, cellCoords.z) === true)
+						//{
+						
+							if (chars[hero].setDestination(cellCoords))
+							{
+								coordsAreSet=true;
+							}
+						//}
 					}
 				}
 			}
