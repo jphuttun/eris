@@ -10,19 +10,19 @@ App = function()
     var numTiles = {"x" : "0", "z" : "0"} // Default numTiles, will be overridden by JSON
 
     // Objects
-	var debugType = 0; // 0 = Console logging
-	var isDebugging = 1; // 0 = false, 1 = true
-	
+    var debugType = 0; // 0 = Console logging
+    var isDebugging = 1; // 0 = false, 1 = true
+    
     var witch, derrin, speechBubble, hero = 1;
-	var charsHandler;
-	var chars = []; // Player, allied and enemy characters
-	var playData = []; // Playerdata
-	var playData1; // Helper variable for playData
-	
-	var userInt; // User Interface class
-	
-	var self = this;
-	
+    var charsHandler;
+    var chars = []; // Player, allied and enemy characters
+    var playData = []; // Playerdata
+    var playData1; // Helper variable for playData
+    
+    var userInt; // User Interface class
+    
+    var self = this;
+    
     // Json files
     var mapDataJson = {};
 
@@ -34,7 +34,20 @@ App = function()
 
         wade.setLoadingImages('images/game/loading.png');
 
-       // Load JSON
+        // *** REQUIRED SCRIPTS
+                
+        // Loading debug interface
+        wade.loadScript('js_dev/debugger.js');
+        // Decide will actions ("messages") send to local script or remote server
+        wade.loadScript('js_dev/communicationLayer.js');
+        // Includes all actions that are loaded during init and characters can execute
+        wade.loadScript('js_dev/charsActions.js');
+        // Includes player characters and their resources (like picture loaders, sound loader etc.)
+        wade.loadScript('js_dev/playerChars.js');
+        // Includes User Interface in game)
+        wade.loadScript('js_dev/playerUI.js');
+
+        // Load JSON
         wade.loadJson('json/erismap1.json', mapDataJson);
 
         // load images
@@ -61,14 +74,14 @@ App = function()
         wade.loadImage('../images/game/fullIcon.jpg'); // Loading UI images
         wade.loadImage('../images/game/emptyIcon.jpg'); // Loading UI images
 */
-		
+        
     };
 
     this.init = function()
     {
         // ** Initialize combat
         wade.app.startCombat();
-				
+                
         // ** Create level
     
         // fill the terrain with grass
@@ -76,11 +89,11 @@ App = function()
         for (var i=0; i < numTiles.x; i++)
         {
             //if (i!=1) {
-				for (var j=0; j < numTiles.z; j++)
-				{
-					wade.iso.setTile(i, j, tileData);
-				}
-			//}
+                for (var j=0; j < numTiles.z; j++)
+                {
+                    wade.iso.setTile(i, j, tileData);
+                }
+            //}
         }
 
         // add a bit of sand

@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function()
         {
-            wade.init('js/erisgame.js');
+            wade.init('js_dev/erisgame.js');
         });
 
     </script>

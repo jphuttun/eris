@@ -6,7 +6,7 @@ App = function()
     //   This way we can get rid of numTiles-global variable
 
     // Global variables
-    // TODO: Ota mallia polyst‰, miten globaalit muuttujat v‰ltet‰‰n
+    // TODO: Ota mallia polyst√§, miten globaalit muuttujat v√§ltet√§√§n
     var numTiles = {"x" : "0", "z" : "0"} // Default numTiles, will be overridden by JSON
 
     // Objects
@@ -35,15 +35,15 @@ App = function()
         // *** REQUIRED SCRIPTS
 				
         // Loading debug interface
-		wade.loadScript('javascripts/debugger.js');
+		wade.loadScript('js/debugger.js');
 		// Decide will actions ("messages") send to local script or remote server
-		wade.loadScript('javascripts/communicationLayer.js');
+		wade.loadScript('js/communicationLayer.js');
 		// Includes all actions that are loaded during init and characters can execute
-		wade.loadScript('javascripts/charsActions.js');
+		wade.loadScript('js/charsActions.js');
 		// Includes player characters and their resources (like picture loaders, sound loader etc.)
-		wade.loadScript('javascripts/playerChars.js');
+		wade.loadScript('js/playerChars.js');
 		// Includes User Interface in game)
-		wade.loadScript('javascripts/playerUI.js');
+		wade.loadScript('js/playerUI.js');
 		
         // *** JSON
 
