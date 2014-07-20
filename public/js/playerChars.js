@@ -21,8 +21,11 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.isDebugging = isDebugging; // 1=Debugging true, 0 = false
 	
 	// *** PUBLIC MEMBERS - Character properties ***
-	this.orders = 3; // Default orders that character have - change to json loader afterwards!
+	this.oaa = 3; // OrdersAndAssistance = Default orders that character have - change to json loader afterwards!
 	this.energy = 25; // Default energy that character have - change to json loader afterwards!
+	this.movementTimes = 0;
+	this.movementUnits = 4;
+	this.currentMovementUnits = 4;
 	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
@@ -50,6 +53,40 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 		Debugger.log(_resData, this.isDebugging, this.debugType,'CharacterData - getWadeResourceData');
         
 		return _resData;
+	}
+	
+	// Check is character possible to move clicked cell and return true, if it is possible
+	this.moveCharacter = function(charX, charZ, clickX, clickZ) {
+		
+		var tryToMove;
+		
+		var dX = clickX - charX;
+		var dZ = clickZ - charZ;
+		var dist = (dX*dX) + (dZ*dZ);
+		dist = Math.pow(dist, 0.5);
+		
+		var currMov = this.movementTimes+1;
+		
+		if (this.energy < dist) {
+			tryToMove = 'Not enough energy to move that distance! Your energy: '+this.energy+' and energy needed'+dist;
+		} else if (currMov > this.oaa) {
+			tryToMove = 'Not enough OAA:s to move! Your OAA:s '+this.oaa+' and OAA:s needed: '+currMov;
+		} else if (this.currentMovementUnits < dist) {
+			tryToMove = 'Not enough movement units to move that distance! Your units are: '+this.currentMovementUnits+' and units needed: '+dist;
+		} else {
+			this.energy = this.energy - dist;
+			Debugger.log(this.energy, this.isDebugging, this.debugType, 'Energy: ');
+			this.movementTimes++;
+			Debugger.log(this.movementTimes, this.isDebugging, this.debugType, 'Movement Times: ');
+			this.oaa = this.oaa - this.movementTimes;
+			Debugger.log(this.oaa, this.isDebugging, this.debugType, 'OAA:s: ');
+			this.currentMovementUnits = this.currentMovementUnits - dist;
+			Debugger.log(this.currentMovementUnits, this.isDebugging, this.debugType, 'Current Movement Units: ');
+			
+			tryToMove = true;
+		}
+		
+		return tryToMove;
 		
 	}
 	

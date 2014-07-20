@@ -36,7 +36,7 @@ function playerUI(isDebugging, debugType) { // Constructor
 	this.UIbutton2.setAlignment('left', 'top');
 	
 	// create Text objects
-	this.textsprite1 = new TextSprite('UI-text1', '48px Arial', 'blue', 'right',5);
+	this.textsprite1 = new TextSprite('UI-text1', '32px Arial', 'blue', 'right',5);
     this.textobj1 = new SceneObject(this.textsprite1);
 	wade.addSceneObject(this.textobj1);
 	

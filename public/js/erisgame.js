@@ -318,6 +318,8 @@ App = function()
 	
 		var charPosition;
 		var charCellCoords;
+		
+		var charActivated = false;
 	
 		// UI-mode is set to targeting - meaning that you don't select other characters to activate or move
 		if (userInt.isTargeting === true) {
@@ -340,39 +342,46 @@ App = function()
 				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
 				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
 					hero=i;
-					
+					charActivated = true;
 					// UI-text info
 					userInt.textsprite1.setText('Activated character: chars'+i);
 				} 			
 			}
 			
-			// Moving selected character
-			if (hero >= 0) 
+			if (charActivated === false) 
 			{
-				if (chars[hero].canMove)
+				// Moving selected character
+				if (hero >= 0) 
 				{
-					var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
-					var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
-					var numCells = wade.iso.getNumCells();
-					if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
+					if (chars[hero].canMove)
 					{
-						// We check, is it possible to move further (lack of orders, movement points etc.)
-						// First we get our character coordinates
-						charPosition = wade.getSceneObject('chars'+hero).getPosition();
-						charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);
-						// Then we check is movement possible
-						//if (playData[hero].moveCharacter(charCellCoords.x, charCellCoords.y, cellCoords.x, cellCoords.z) === true)
-						//{
-						
-							if (chars[hero].setDestination(cellCoords))
+						var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+						var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+						var numCells = wade.iso.getNumCells();
+						if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
+						{
+							// We check, is it possible to move further (lack of orders, movement points etc.)
+							// First we get our character coordinates
+							charPosition = wade.getSceneObject('chars'+hero).getPosition();
+							charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);
+							
+							// Then we check is movement possible
+							var charMoving = playData[hero].moveCharacter(charCellCoords.x, charCellCoords.z, cellCoords.x, cellCoords.z);
+							if ( charMoving === true)
 							{
-								coordsAreSet=true;
+								// And if it is, then move character
+								if (chars[hero].setDestination(cellCoords))
+								{
+									coordsAreSet=true;
+								}
+							} else {
+								// Otherwise we give info text, why movement attempt fail
+								userInt.textsprite1.setText(charMoving);
 							}
-						//}
+						}
 					}
 				}
 			}
-			
 			// if reasonable cell is Clicked, then showing particle effect cursor animation
 			if (coordsAreSet==true)
 			{
