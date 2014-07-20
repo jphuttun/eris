@@ -9,15 +9,9 @@ var path = require('path');
 
 var app = module.exports = express();
 
-// 
-var viewDir = "views";
-var alternativeViewDir = process.argv[2] || '';
-
-if (alternativeViewDir != "") { viewDir = viewDir + '_' + alternativeViewDir; }
-
 // all environments
 app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, viewDir));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
 app.use(express.favicon());
 app.use(express.json());
