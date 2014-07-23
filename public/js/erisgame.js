@@ -76,6 +76,9 @@ App = function()
 
         wade.loadImage('images/game/fullIcon.jpg'); // Loading UI images
         wade.loadImage('images/game/emptyIcon.jpg'); // Loading UI images
+
+		wade.loadImage('images/game/iconOn.jpg'); // Loading UI images
+        wade.loadImage('images/game/iconOff.jpg'); // Loading UI images
 		
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
