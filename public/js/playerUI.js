@@ -13,7 +13,7 @@ Initialize game
 
 */
 
-function playerUI(isDebugging, debugType) { // Constructor
+function playerUI(characterIndex, characterData, isDebugging, debugType) { // Constructor
 
 	// *** PUBLIC MEMBERS ***
 	this.debugT = debugType; // Debuging type => 0 = Console logging
@@ -21,6 +21,9 @@ function playerUI(isDebugging, debugType) { // Constructor
 	
 	// *** PROPERTIES ***
 	this.isTargeting = false; // Is UI mode targeting on?
+	
+	this.selectedCharacterIndex = characterIndex;
+	this.characterData = characterData;
 	
 	self = this;
 	
@@ -100,6 +103,8 @@ function playerUI(isDebugging, debugType) { // Constructor
 		self.UIbutton4.setVisible(true);
 		Debugger.log('Button2-off',self.isD, self.debugT, self.isTargeting);
 		self.textsprite1.setText('Change action!');
+		//self.characterData[self.selectedCharacterIndex].changeAction();
+		self.refreshActions();
 	
 		return true; // This stops event propagation - return true lopettaa klikkausjatkumon, sillä muuten painaisu rekisteröitäisiin myös alemmilla layereillä!
 	};	
@@ -110,6 +115,8 @@ function playerUI(isDebugging, debugType) { // Constructor
 		self.UIbutton3.setVisible(true);
 		Debugger.log('Button2-on',self.isD, self.debugT, self.isTargeting);
 		self.textsprite1.setText('Change action!');
+		//self.characterData[self.selectedCharacterIndex].changeAction();
+		self.refreshActions();
 	
 		return true; // This stops event propagation - return true lopettaa klikkausjatkumon, sillä muuten painaisu rekisteröitäisiin myös alemmilla layereillä!
 	};		
@@ -149,6 +156,16 @@ function playerUI(isDebugging, debugType) { // Constructor
 	}
 	*/
 }  // end PlayerUI
+
+playerUI.prototype.refreshActions = function() {
+
+	var i;
+	
+	for (i=0; i < self.characterData.length; i++) {
+		self.characterData[i].changeAction();
+	}
+
+};
 
 // For Chrome Debugging
 //@ sourceURL=playerUI.js

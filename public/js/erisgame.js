@@ -234,7 +234,7 @@ App = function()
         wade.setLayerTransform(3, 0, 0);		
 		
 		// Create UI
-		userInt = new playerUI(isDebugging, debugType);
+		userInt = new playerUI(hero, playData, isDebugging, debugType);
 		
         // do something upon reaching an object
         chars[hero].owner.onObjectReached = function(eventData)
@@ -346,6 +346,7 @@ App = function()
 				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
 					hero=i;
 					charActivated = true;
+					userInt.selectedCharacterIndex = hero;
 					// UI-text info
 					userInt.textsprite1.setText('Activated character: chars'+i);
 				} 			

@@ -21,11 +21,13 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.isDebugging = isDebugging; // 1=Debugging true, 0 = false
 	
 	// *** PUBLIC MEMBERS - Character properties ***
-	this.oaa = 3; // OrdersAndAssistance = Default orders that character have - change to json loader afterwards!
-	this.energy = 25; // Default energy that character have - change to json loader afterwards!
-	this.movementTimes = 0;
-	this.movementUnits = 4;
-	this.currentMovementUnits = 4;
+	this.oaa = 3; // In future JSON loaded - OrdersAndAssistance = Default orders that character have - change to json loader afterwards!
+	this.energy = 25; // In future JSON loaded -  Default energy that character have - change to json loader afterwards!
+	this.movementTimes = 0; // How many times character have moved in his/her turn <= is used to calculate movementUnits which is reducing all the time during turn  ie. 4,2,1,1, etc. (and is refreshed to next turn)
+	this.movementUnits = 4; // In future JSON loaded -  How fast character is (default movement units for character)
+	this.currentMovementUnits = this.movementUnits; // Character current movement units in any time in tactical mode
+	
+	this.movementFlag = false;
 	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
@@ -47,7 +49,7 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	*/
 	
 	// *** PUBLIC FUNCTIONS ***
-	// Return Wade resource data attached in character
+	// --- Return Wade resource data attached in character
 	this.getWadeResourceData = function() {
 		
 		Debugger.log(_resData, this.isDebugging, this.debugType,'CharacterData - getWadeResourceData');
@@ -55,7 +57,7 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 		return _resData;
 	}
 	
-	// Check is character possible to move clicked cell and return true, if it is possible
+	// --- Check is character possible to move clicked cell and return true, if it is possible
 	this.moveCharacter = function(charX, charZ, clickX, clickZ) {
 		
 		var tryToMove;
@@ -69,17 +71,26 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 		
 		if (this.energy < dist) {
 			tryToMove = 'Not enough energy to move that distance! Your energy: '+this.energy+' and energy needed'+dist;
-		} else if (currMov > this.oaa) {
+		} else if (currMov > this.oaa && this.movementFlag === false) {
 			tryToMove = 'Not enough OAA:s to move! Your OAA:s '+this.oaa+' and OAA:s needed: '+currMov;
 		} else if (this.currentMovementUnits < dist) {
 			tryToMove = 'Not enough movement units to move that distance! Your units are: '+this.currentMovementUnits+' and units needed: '+dist;
 		} else {
+			// Moving uses energy
 			this.energy = this.energy - dist;
 			Debugger.log(this.energy, this.isDebugging, this.debugType, 'Energy: ');
-			this.movementTimes++;
-			Debugger.log(this.movementTimes, this.isDebugging, this.debugType, 'Movement Times: ');
-			this.oaa = this.oaa - this.movementTimes;
-			Debugger.log(this.oaa, this.isDebugging, this.debugType, 'OAA:s: ');
+
+			// With first movement, reduces OAA:s and increases movementTimes
+			if ( this.movementFlag === false) 
+			{
+				this.movementFlag = true; // Movement flag can be refreshed after actionchanged
+				this.movementTimes++;
+				Debugger.log(this.movementTimes, this.isDebugging, this.debugType, 'Movement Times: ');
+				this.oaa = this.oaa - this.movementTimes;
+				Debugger.log(this.oaa, this.isDebugging, this.debugType, 'OAA:s: ');
+			}
+			
+			// Moving reduces currentMovementUnits
 			this.currentMovementUnits = this.currentMovementUnits - dist;
 			Debugger.log(this.currentMovementUnits, this.isDebugging, this.debugType, 'Current Movement Units: ');
 			
@@ -88,6 +99,30 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 		
 		return tryToMove;
 		
+	}
+	
+	//--- Change Action / change character action (but not turn) ---
+	this.changeAction = function() {
+	
+		this.movementFlag = false; // Refresh movement
+		
+		var lu = Math.pow(2, this.movementTimes);
+		var matka = this.movementUnits / lu;
+		
+		if (matka < 1) {
+			matka = 1;
+		}
+		
+		// Increase current movement units
+		this.currentMovementUnits = this.currentMovementUnits + matka;
+		
+		if (this.currentMovementUnits > this.movementUnits) {
+			this.currentMovementUnits = this.movementUnits;
+		}
+		
+		Debugger.log(matka, this.isDebugging, this.debugType, 'Added distance: '+this.charType+' : ');
+		Debugger.log(this.currentMovementUnits, this.isDebugging, this.debugType, 'Current Movement Units: '+this.charType+' : ');
+	
 	}
 	
 }  // end PlayerChars
