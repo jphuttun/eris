@@ -27,7 +27,10 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.movementUnits = 4; // In future JSON loaded -  How fast character is (default movement units for character)
 	this.currentMovementUnits = this.movementUnits; // Character current movement units in any time in tactical mode
 	
+	this.shootingAbility = 4;
+	
 	this.movementFlag = false;
+	this.isDestroyed = 0;
 	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
@@ -62,10 +65,7 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 		
 		var tryToMove;
 		
-		var dX = clickX - charX;
-		var dZ = clickZ - charZ;
-		var dist = (dX*dX) + (dZ*dZ);
-		dist = Math.pow(dist, 0.5);
+		var dist = this.calculateDist(charX, charZ, clickX, clickZ);
 		
 		var currMov = this.movementTimes+1;
 		
@@ -125,7 +125,64 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	
 	}
 	
+	//--- Simple shoot function
+	this.shoot = function(charX, charZ, clickX, clickZ, charind) {
+		
+		var trytoshoot = false;
+		
+		var dist = this.calculateDist(charX, charZ, clickX, clickZ);
+		Debugger.log(dist, this.isDebugging, this.debugType, 'Distance: ');
+		
+		var diceroll = this.dice(2,6,0);
+		
+		var treshold = this.shootingAbility + dist;
+		
+		var currMov = this.movementTimes+1;		
+		
+		if (currMov > this.oaa) {
+			trytoshoot = 'Not enough OAA:s to move! Your OAA:s '+this.oaa+' and OAA:s needed: '+currMov;
+		} else {
+			this.movementTimes++;
+			this.oaa = this.oaa - this.movementTimes;
+		
+			if (diceroll > treshold) {
+				Debugger.log(diceroll, this.isDebugging, this.debugType, 'You hit (treshold): '+treshold);
+				trytoshoot = true;
+			} else {
+				Debugger.log(diceroll, this.isDebugging, this.debugType, 'You miss (treshold): '+treshold);
+				trytoshoot = false;
+			}
+		}
+		
+		return trytoshoot;
+	}
+	
 }  // end PlayerChars
+
+// --- Dice generator 
+playerChars.prototype.dice = function(x, y, plus) {
+	
+	// Dice generator x d y + plus (ie. 2d6+1)
+	var res = 0;
+	
+	for (var i=1; i<=x; i++) {
+		res = res + Math.floor((Math.random() * y) + 1);
+	}
+	res = res + plus;
+	
+	return res;
+}
+
+// --- Calculate distance between 2 cells (cell coordinates)
+playerChars.prototype.calculateDist = function(charX, charZ, clickX, clickZ) {
+
+	var dX = clickX - charX;
+	var dZ = clickZ - charZ;
+	var dist = (dX*dX) + (dZ*dZ);
+	dist = Math.pow(dist, 0.5);
+	
+	return dist;
+};
 
 playerChars.prototype.loadPlayerData = function(pType) {
 		
