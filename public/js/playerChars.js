@@ -8,7 +8,7 @@ Initialize game
 
 
 // TODO: Create player characters, which are:
-// 1.) part of character array
+// 1.) instance of character array
 // 2.) have list of character actions defined in charsActions.js
 
 */
@@ -27,15 +27,15 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.movementUnits = 4; // In future JSON loaded -  How fast character is (default movement units for character)
 	this.currentMovementUnits = this.movementUnits; // Character current movement units in any time in tactical mode
 	
-	this.shootingAbility = 4;
+	this.shootingAbility = 4; // In future JSON loaded - Character shooting ability
 	
-	this.movementFlag = false;
-	this.isDestroyed = 0;
+	this.movementFlag = false; // MovementFlag only change after clicking change action or change turn
+	this.isDestroyed = 0; // Is character destroyed - 0 = not destroyed
 	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
 	
-	var that = this; // By convention, we create a private variable that. This is used to make the object available to teh private methods.
+	var self = this; // By convention, we create a private variable self. This is used to make the object available to the private methods.
  
 	// Constructor called private functions
 	_resData = this.loadPlayerData(playerType);
@@ -159,6 +159,7 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	
 }  // end PlayerChars
 
+// *** dice ***
 // --- Dice generator 
 playerChars.prototype.dice = function(x, y, plus) {
 	
@@ -173,8 +174,14 @@ playerChars.prototype.dice = function(x, y, plus) {
 	return res;
 }
 
+// *** calculateDist ***
 // --- Calculate distance between 2 cells (cell coordinates)
 playerChars.prototype.calculateDist = function(charX, charZ, clickX, clickZ) {
+
+	// charX = character X (or basepoint X) coordinate
+	// charZ = character Z (or basepoint Z) coordinate
+	// clickX = clicked cell X coordinate
+	// clickZ = clicked cell Z coordinate
 
 	var dX = clickX - charX;
 	var dZ = clickZ - charZ;
@@ -183,6 +190,9 @@ playerChars.prototype.calculateDist = function(charX, charZ, clickX, clickZ) {
 	
 	return dist;
 };
+
+// *** loadPlayerData ***
+// --- Loading animations and properties that wade iso uses
 
 playerChars.prototype.loadPlayerData = function(pType) {
 		

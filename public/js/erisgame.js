@@ -256,8 +256,6 @@ App = function()
         var pos = wade.iso.getWorldCoordinates(13, 16);
         pos.z = 1;
         wade.setCameraPosition(pos);
-
-		//this.loadStomach();
 		
         // start moving after 500 milliseconds
         setTimeout(function()
