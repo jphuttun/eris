@@ -337,7 +337,7 @@ App = function()
 
 						charPosition = wade.getSceneObject('chars'+hero).getPosition();
 						charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);						
-						var charshooting = playData[hero].shoot(charCellCoords.x, charCellCoords.z, cellCoords.x, cellCoords.z, i);
+						var charshooting = playData[hero].shootTarget(charCellCoords.x, charCellCoords.z, cellCoords.x, cellCoords.z, i);
 						if (charshooting === true)
 						{
 							// And if it hit, then remove character
