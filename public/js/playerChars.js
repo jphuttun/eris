@@ -115,7 +115,7 @@ playerChars.prototype.moveCharacter = function(charX, charZ, clickX, clickZ) {
 	
 	return tryToMove;
 	
-}
+};
 
 //--- Change Action / change character action (but not turn) ---
 playerChars.prototype.changeAction = function() {
@@ -140,7 +140,7 @@ playerChars.prototype.changeAction = function() {
 	Debugger.log(matka, this.isDebugging, this.debugType, 'Added distance: '+this.charType+' : ');
 	Debugger.log(this.currentMovementUnits, this.isDebugging, this.debugType, 'Current Movement Units: '+this.charType+' : ');
 
-}
+};
 
 // *** shootTarget ***
 // Checking is shooting possible and shoot target, if it is
@@ -185,7 +185,7 @@ playerChars.prototype.shootTarget = function(charX, charZ, clickX, clickZ, chari
 	
 	return trytoshoot;
 	
-}
+};
 
 // *** dice ***
 // --- Dice generator 
@@ -200,7 +200,7 @@ playerChars.prototype.dice = function(x, y, plus) {
 	res = res + plus;
 	
 	return res;
-}
+};
 
 // *** calculateDist ***
 // --- Calculate distance between 2 cells (cell coordinates)
