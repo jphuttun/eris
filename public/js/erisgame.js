@@ -39,9 +39,9 @@ App = function()
 		// Decide will actions ("messages") send to local script or remote server
 		wade.loadScript('js/communicationLayer.js');
 		// Includes all actions that are loaded during init and characters can execute
-		wade.loadScript('js/charsActions.js');
+		wade.loadScript('js/CharsActions.js');
 		// Includes player characters and their resources (like picture loaders, sound loader etc.)
-		wade.loadScript('js/playerChars.js');
+		wade.loadScript('js/PlayerChars.js');
 		// Includes User Interface in game)
 		wade.loadScript('js/playerUI.js');
 		
@@ -100,13 +100,13 @@ App = function()
         // ** Initialize combat
         wade.app.startCombat();
 		
-		charsHandler = new charsActions();
+		charsHandler = new CharsActions();
 		
 		// ** Creating player characters
-		playData1 = new playerChars('derrin', isDebugging, debugType);
+		playData1 = new PlayerChars('derrin', isDebugging, debugType);
 		playData.push(playData1);
 		
-		playData1 = new playerChars('witch', isDebugging, debugType);
+		playData1 = new PlayerChars('witch', isDebugging, debugType);
 		playData.push(playData1);
 		
 		

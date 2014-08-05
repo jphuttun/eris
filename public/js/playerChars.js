@@ -13,7 +13,7 @@ Initialize game
 
 */
 
-function playerChars(playerType, isDebugging, debugType) { // Constructor
+function PlayerChars(playerType, isDebugging, debugType) { // Constructor
 
 	// *** PUBLIC MEMBERS ***
 	this.charType = playerType; // Type of character that has created
@@ -30,13 +30,13 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 	this.shootingAbility = 4; // In future JSON loaded - Character shooting ability
 	
 	this.movementFlag = false; // MovementFlag only change after clicking change action or change turn
-	this.actionFlag = false;
+	this.actionFlag = false; // If any action - movement, shooting or any other main action is mady by that character action turn, actionFlag changes to true
 	this.isDestroyed = 0; // Is character destroyed - 0 = not destroyed
 	
 	// *** PRIVATE MEMBERS ***
 	var _resData; // Holding resources that have defined for Wade
 	
-	var self = this; // By convention, we create a private variable self. This is used to make the object available to the private methods.
+	//var self = this; // By convention, we create a private variable self. This is used to make the object available to the private methods.
  
 	// Constructor called private functions
 	_resData = this.loadPlayerData(playerType);
@@ -64,7 +64,7 @@ function playerChars(playerType, isDebugging, debugType) { // Constructor
 }  // end PlayerChars
 
 // --- Check is character possible to move clicked cell and return true, if it is possible
-playerChars.prototype.moveCharacter = function(charX, charZ, clickX, clickZ) {
+PlayerChars.prototype.moveCharacter = function(charX, charZ, clickX, clickZ) {
 	
 	var tryToMove;
 	
@@ -118,7 +118,7 @@ playerChars.prototype.moveCharacter = function(charX, charZ, clickX, clickZ) {
 };
 
 //--- Change Action / change character action (but not turn) ---
-playerChars.prototype.changeAction = function() {
+PlayerChars.prototype.changeAction = function() {
 
 	this.movementFlag = false; // Refresh movement
 	this.actionFlag = false; // Refresh actions
@@ -145,7 +145,7 @@ playerChars.prototype.changeAction = function() {
 // *** shootTarget ***
 // Checking is shooting possible and shoot target, if it is
 // Return: true if hit, false if miss, and message, if shooting is not possible
-playerChars.prototype.shootTarget = function(charX, charZ, clickX, clickZ, charind) {
+PlayerChars.prototype.shootTarget = function(charX, charZ, clickX, clickZ, charind) {
 
 	// charX = character X or basepoint X coordinate
 	// charZ = character Z or basepoint Z coordinate
@@ -189,7 +189,7 @@ playerChars.prototype.shootTarget = function(charX, charZ, clickX, clickZ, chari
 
 // *** dice ***
 // --- Dice generator 
-playerChars.prototype.dice = function(x, y, plus) {
+PlayerChars.prototype.dice = function(x, y, plus) {
 	
 	// Dice generator x d y + plus (ie. 2d6+1)
 	var res = 0;
@@ -204,7 +204,7 @@ playerChars.prototype.dice = function(x, y, plus) {
 
 // *** calculateDist ***
 // --- Calculate distance between 2 cells (cell coordinates)
-playerChars.prototype.calculateDist = function(charX, charZ, clickX, clickZ) {
+PlayerChars.prototype.calculateDist = function(charX, charZ, clickX, clickZ) {
 
 	// charX = character X (or basepoint X) coordinate
 	// charZ = character Z (or basepoint Z) coordinate
@@ -222,7 +222,7 @@ playerChars.prototype.calculateDist = function(charX, charZ, clickX, clickZ) {
 // *** loadPlayerData ***
 // --- Loading animations and properties that wade iso uses
 
-playerChars.prototype.loadPlayerData = function(pType) {
+PlayerChars.prototype.loadPlayerData = function(pType) {
 		
 	var playerData;
 	
