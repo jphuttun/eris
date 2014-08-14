@@ -39,9 +39,9 @@ App = function()
 		// Decide will actions ("messages") send to local script or remote server
 		wade.loadScript('js/communicationLayer.js');
 		// Includes all actions that are loaded during init and characters can execute
-		wade.loadScript('js/charsActions.js');
+		wade.loadScript('js/CharsActions.js');
 		// Includes player characters and their resources (like picture loaders, sound loader etc.)
-		wade.loadScript('js/playerChars.js');
+		wade.loadScript('js/PlayerChars.js');
 		// Includes User Interface in game)
 		wade.loadScript('js/playerUI.js');
 		
@@ -76,6 +76,9 @@ App = function()
 
         wade.loadImage('images/game/fullIcon.jpg'); // Loading UI images
         wade.loadImage('images/game/emptyIcon.jpg'); // Loading UI images
+
+		wade.loadImage('images/game/iconOn.jpg'); // Loading UI images
+        wade.loadImage('images/game/iconOff.jpg'); // Loading UI images
 		
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
@@ -97,13 +100,13 @@ App = function()
         // ** Initialize combat
         wade.app.startCombat();
 		
-		charsHandler = new charsActions();
+		charsHandler = new CharsActions();
 		
 		// ** Creating player characters
-		playData1 = new playerChars('derrin', isDebugging, debugType);
+		playData1 = new PlayerChars('derrin', isDebugging, debugType);
 		playData.push(playData1);
 		
-		playData1 = new playerChars('witch', isDebugging, debugType);
+		playData1 = new PlayerChars('witch', isDebugging, debugType);
 		playData.push(playData1);
 		
 		
@@ -231,7 +234,7 @@ App = function()
         wade.setLayerTransform(3, 0, 0);		
 		
 		// Create UI
-		userInt = new playerUI(isDebugging, debugType);
+		userInt = new playerUI(hero, playData, isDebugging, debugType);
 		
         // do something upon reaching an object
         chars[hero].owner.onObjectReached = function(eventData)
@@ -253,8 +256,6 @@ App = function()
         var pos = wade.iso.getWorldCoordinates(13, 16);
         pos.z = 1;
         wade.setCameraPosition(pos);
-
-		//this.loadStomach();
 		
         // start moving after 500 milliseconds
         setTimeout(function()
@@ -324,28 +325,61 @@ App = function()
 		// UI-mode is set to targeting - meaning that you don't select other characters to activate or move
 		if (userInt.isTargeting === true) {
 			// Checking, is any character in cell that clicked
-			for (var i=0; i<chars.length; i=i+1) {
-				charPosition = wade.getSceneObject('chars'+i).getPosition();
-				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
-				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
-					Debugger.log('chars'+i,isDebugging,debugType,'Stub: We try to shoot at:');
-					
-					// UI-text info
-					userInt.textsprite1.setText('Stub: We try to shoot at: chars'+i);					
-				} 			
+			for (var i=0; i<chars.length; i++) {
+				if (playData[i].isDestroyed === 0) {
+					charPosition = wade.getSceneObject('chars'+i).getPosition();
+					charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
+					if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
+						Debugger.log('chars'+i,isDebugging,debugType,'Stub: We try to shoot at:');
+						
+						// UI-text info
+						userInt.textsprite1.setText('Stub: We try to shoot at: chars'+i);
+
+						charPosition = wade.getSceneObject('chars'+hero).getPosition();
+						charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);						
+						var charshooting = playData[hero].shootTarget(charCellCoords.x, charCellCoords.z, cellCoords.x, cellCoords.z, i);
+						if (charshooting === true)
+						{
+							// And if it hit, then remove character
+							wade.iso.deleteObjectByName('chars'+i);
+							playData[i].isDestroyed = 1;
+							
+							// show a particle effect - CURSOR CLICK ANIMATION
+							var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
+							var animation = new Animation('images/game/cursor.png', 4, 4, 30);
+							sprite.addAnimation('cursor', animation);
+							sprite.setSize(100, 50);
+							var cursor = new SceneObject(sprite, 0, worldCoords.x, worldCoords.y);
+							wade.addSceneObject(cursor);
+							sprite.pushToBack();
+							cursor.playAnimation('cursor');
+							cursor.onAnimationEnd = function()
+							{
+								wade.removeSceneObject(cursor);
+							};
+							
+						} else {
+							// Otherwise we give info text, why movement attempt fail
+							userInt.textsprite1.setText(charshooting);
+						}					
+					}
+				}
 			}
 		} else {
 		
 			// Activation of selected character
 			for (var i=0; i<chars.length; i=i+1) {
-				charPosition = wade.getSceneObject('chars'+i).getPosition();
-				charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
-				if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
-					hero=i;
-					charActivated = true;
-					// UI-text info
-					userInt.textsprite1.setText('Activated character: chars'+i);
-				} 			
+				if (playData[i].isDestroyed === 0) {
+					charPosition = wade.getSceneObject('chars'+i).getPosition();
+					charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
+					if (charCellCoords.x === cellCoords.x && charCellCoords.z === cellCoords.z) {
+						hero=i;
+						charActivated = true;
+						userInt.selectedCharacterIndex = hero;
+						// UI-text info
+						userInt.textsprite1.setText('Activated character: chars'+i);
+					} 
+				}
 			}
 			
 			if (charActivated === false) 
@@ -353,30 +387,32 @@ App = function()
 				// Moving selected character
 				if (hero >= 0) 
 				{
-					if (chars[hero].canMove)
-					{
-						var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
-						var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
-						var numCells = wade.iso.getNumCells();
-						if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
+					if (playData[hero].isDestroyed === 0) {
+						if (chars[hero].canMove)
 						{
-							// We check, is it possible to move further (lack of orders, movement points etc.)
-							// First we get our character coordinates
-							charPosition = wade.getSceneObject('chars'+hero).getPosition();
-							charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);
-							
-							// Then we check is movement possible
-							var charMoving = playData[hero].moveCharacter(charCellCoords.x, charCellCoords.z, cellCoords.x, cellCoords.z);
-							if ( charMoving === true)
+							var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+							var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+							var numCells = wade.iso.getNumCells();
+							if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
 							{
-								// And if it is, then move character
-								if (chars[hero].setDestination(cellCoords))
+								// We check, is it possible to move further (lack of orders, movement points etc.)
+								// First we get our character coordinates
+								charPosition = wade.getSceneObject('chars'+hero).getPosition();
+								charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);
+								
+								// Then we check is movement possible
+								var charMoving = playData[hero].moveCharacter(charCellCoords.x, charCellCoords.z, cellCoords.x, cellCoords.z);
+								if (charMoving === true)
 								{
-									coordsAreSet=true;
+									// And if it is, then move character
+									if (chars[hero].setDestination(cellCoords))
+									{
+										coordsAreSet=true;
+									}
+								} else {
+									// Otherwise we give info text, why movement attempt fail
+									userInt.textsprite1.setText(charMoving);
 								}
-							} else {
-								// Otherwise we give info text, why movement attempt fail
-								userInt.textsprite1.setText(charMoving);
 							}
 						}
 					}

@@ -1,21 +1,21 @@
 /* -- charsActions.js --
 
-Tänne on sisällytetty toistaiseksi kaikki hahmojen osaamat Actionit yms. 
+Tï¿½nne on sisï¿½llytetty toistaiseksi kaikki hahmojen osaamat Actionit yms. 
 
 */
 
-charsActions = function() {
+CharsActions = function() {
 	
 };	// end charsActions
 
-charsActions.prototype.walkToObject = function(heroCharacter, targetObject) {
+CharsActions.prototype.walkToObject = function(heroCharacter, targetObject) {
 	if (heroCharacter.canMove)
 	{
 		heroCharacter.goToObject(targetObject);
 	}
 };	// end walkToObject
 
-charsActions.prototype.talk = function(heroCharacter, speechBubble, text, time) {
+CharsActions.prototype.talk = function(heroCharacter, speechBubble, text, time) {
 	// if we're talking already, cancel the talk timeout
 	if (heroCharacter.talkTimeout)
 	{
@@ -41,14 +41,14 @@ charsActions.prototype.talk = function(heroCharacter, speechBubble, text, time) 
 	return speechBubble;
 }; // end talk
 
-charsActions.prototype.reachObjectOccurEvents = function(heroCharacter, eventData, numFlowersLeft) {
+CharsActions.prototype.reachObjectOccurEvents = function(heroCharacter, eventData, numFlowersLeft) {
 
 	if (eventData.object.getName() == 'cauldron')
 	{
-		// Tässä kohdassa ladataan tietoa serveriltä ja lähetetään tietoa serverille (esim. peliobjective saavutettu ja sitä
-		// vastaavat tiedot ladataan serveriltä, samalla kun lähetetään serverille tiedot kentän edistymisestä tiettyyn pisteeseen)
+		// Tï¿½ssï¿½ kohdassa ladataan tietoa serveriltï¿½ ja lï¿½hetetï¿½ï¿½n tietoa serverille (esim. peliobjective saavutettu ja sitï¿½
+		// vastaavat tiedot ladataan serveriltï¿½, samalla kun lï¿½hetetï¿½ï¿½n serverille tiedot kentï¿½n edistymisestï¿½ tiettyyn pisteeseen)
 		
-		// Serveri voisi palauttaa esim. alta löytyvän JSON tiedoston
+		// Serveri voisi palauttaa esim. alta lï¿½ytyvï¿½n JSON tiedoston
 		
 		//   {
 		//		"testString" : "We reach the object! Should we continue attack or secure this location?",
@@ -56,7 +56,7 @@ charsActions.prototype.reachObjectOccurEvents = function(heroCharacter, eventDat
 		//	}
 		
 		//this.serverResponse = {};
-		//var dataToSend = "ReachObject¤cauldron";
+		//var dataToSend = "ReachObjectï¿½cauldron";
 		//var url = 'http://www.example.com/doSomething.php?';
 		//url = url + encodeURIComponent(dataToSend);
 		//wade.preloadJson(url, this.serverResponse, 0, 1);
@@ -85,9 +85,9 @@ charsActions.prototype.reachObjectOccurEvents = function(heroCharacter, eventDat
 	
 	return numFlowersLeft;
 
-} // end reachObjectOccurEvents
+}; // end reachObjectOccurEvents
 
-charsActions.prototype.particleEffect = function(eventData) {
+CharsActions.prototype.particleEffect = function(eventData) {
 	// show a particle effect
 	var sprite = new Sprite(null, wade.iso.getObjectsLayerId());
 	var animation = new Animation('images/game/sparkle.png', 8, 4, 30);
@@ -101,9 +101,9 @@ charsActions.prototype.particleEffect = function(eventData) {
 	{
 		wade.removeSceneObject(sparkle);
 	};
-} // end particleEffect
+}; // end particleEffect
 
-charsActions.prototype.afterAnimation = function(heroCharacter, speechBubble, numFlowersLeft, eventData) {
+CharsActions.prototype.afterAnimation = function(heroCharacter, speechBubble, numFlowersLeft, eventData) {
 	if (eventData.name == 'Crouch_iso_ne')
 	{
 		// face south
@@ -139,6 +139,6 @@ charsActions.prototype.afterAnimation = function(heroCharacter, speechBubble, nu
 			heroCharacter.canMove = true;
 		}
 	}
-} // end afterAnimation
+}; // end afterAnimation
 // For Chrome Debugging
 //@ sourceURL=charsActions.js
