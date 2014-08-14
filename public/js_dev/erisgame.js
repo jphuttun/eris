@@ -1,34 +1,34 @@
 App = function()
 {
-    // List of TODOs
-    // - Instead of loading every object from JSON with mapDataJson.data.something, 
-    //   create meaningful objects and JSON-loader which loads json to them
-    //   This way we can get rid of numTiles-global variable
 
-    // Global variables
-    // TODO: Ota mallia polyst�, miten globaalit muuttujat v�ltet��n
-    var numTiles = {"x" : "0", "z" : "0"} // Default numTiles, will be overridden by JSON
+    /***
+    Idea, miten tulen hoitamaan monta statea
+    erisgame.js:ssä on kaksi funktiota
+    this.load: Ladataan _vain_ sellaiset perusjutut, joita tarvitaan koko gameen (en tiedä onko näitä yhtään)
+    this.init: 
+        - Määritellään globaalit waden asetukset
+        - Luodaan game-objekti, joka sisältää pelin tilan (tai v2.0:ssa siellä on pelitilastack, jonne pushataan ja popataan uusin tila)
+        - Moodin lisäksi on tiedossa status, esim. mainmenu.load.notready/running/ready
+        - Kun on valmista, käynnistetään eka state
+            - mainmenu.load()
+            - mainmenu.init()
+        - Huom: En tiedä voiko tuon vain heittää koodiin vai pitääkö rakentaa tänne main event loopiin tilakone, joka kokoajan tarkastelee koko pelin statea
+        - Tyyliin heti kun state muuttuu, niin suoritetaan oldstate.remove() ja sit newstate.load() ja newstate.init()
 
-    // Objects
-    var debugType = 0; // 0 = Console logging
-    var isDebugging = 1; // 0 = false, 1 = true
+    Jokainen "pelin state" noudattaa sisällöltään samaa ideologiaa ja toteuttaa nämä funktiot
+    - load: Lataa tarvittavat resurssit
+    - init: Asettaa perusteet kuntoon, käynnistää run-funktion
+    - run: funktio, jossa on koko pelin logiikka. Täällä on myös main loopit
+    - unload: poistaa muistista kaiken, kutsutaan silloin kun state muuttuu ja halutaan unohtaa kaikki
     
-    var witch, derrin, speechBubble, hero = 1;
-    var charsHandler;
-    var chars = []; // Player, allied and enemy characters
-    var playData = []; // Playerdata
-    var playData1; // Helper variable for playData
-    
-    var userInt; // User Interface class
-    
+    ***/
+
     var self = this;
-    
-    // Json files
-    var mapDataJson = {};
 
     this.load = function()
     {
-        // *** IMAGES
+        // Load everything that is needed for whole game
+        // Everything related to one game mode should be loaded in mode file
 
         wade.setBasePath('/');
 
@@ -36,148 +36,120 @@ App = function()
 
         // *** REQUIRED SCRIPTS
                 
-        // Loading debug interface
+        // FROM JS
         wade.loadScript('js_dev/debugger.js');
-        // Decide will actions ("messages") send to local script or remote server
-        wade.loadScript('js_dev/communicationLayer.js');
-        // Includes all actions that are loaded during init and characters can execute
-        wade.loadScript('js_dev/charsActions.js');
-        // Includes player characters and their resources (like picture loaders, sound loader etc.)
-        wade.loadScript('js_dev/playerChars.js');
-        // Includes User Interface in game)
-        wade.loadScript('js_dev/playerUI.js');
 
-        // Load JSON
-        wade.loadJson('json/erismap1.json', mapDataJson);
+        // FROM JS_DEV
+        wade.loadScript('js_dev/game.js');
+        wade.loadScript('js_dev/gameMode.js');
+        wade.loadScript('js_dev/mainmenu.js');
+        wade.loadScript('js_dev/combat.js');
+        wade.loadScript('js_dev/strategy.js');
 
-        // load images
-        wade.loadImage('images/game/grass0.png');
-        wade.loadImage('images/game/sand0.png');
-        wade.loadImage('images/game/grass0_allSides.png');
-/*
-        wade.loadImage('../images/game/daisies0.png');
-        wade.loadImage('../images/game/daisies1.png');
-        wade.loadImage('../images/game/daisies2.png');
-        wade.loadImage('../images/game/daisies3.png');
-        wade.loadImage('../images/game/plant.png');
-        wade.loadImage('../images/game/cauldron.png');
-        wade.loadImage('../images/game/flower.png');
-        wade.loadImage('../images/game/smoke.png');
-        wade.loadImage('../images/game/house.png');
-        wade.loadImage('../images/game/callout.png');
-        wade.loadImage('../images/game/witch_Crouch_iso_ne.png');
-        wade.loadImage('../images/game/beach.png');
-        wade.loadImage('../images/game/beach_corner.png');
-        wade.loadImage('../images/game/cursor.png');
-        wade.loadImage('../images/game/sparkle.png');
-
-        wade.loadImage('../images/game/fullIcon.jpg'); // Loading UI images
-        wade.loadImage('../images/game/emptyIcon.jpg'); // Loading UI images
-*/
-        
     };
 
     this.init = function()
     {
-        // ** Initialize combat
-        wade.app.startCombat();
-                
-        // ** Create level
-    
-        // fill the terrain with grass
-        var tileData = {texture: 'images/game/grass0.png'};
-        for (var i=0; i < numTiles.x; i++)
-        {
-            //if (i!=1) {
-                for (var j=0; j < numTiles.z; j++)
-                {
-                    wade.iso.setTile(i, j, tileData);
-                }
-            //}
-        }
+        // *** INIT GAME START ***
 
-        // add a bit of sand
-        wade.iso.setTile(2, 3, {texture: 'images/game/sand0.png'});
-        wade.iso.setTransition(2, 3, {texture: 'images/game/grass0_allSides.png'});
+        Debugger.log('Initializing game: BEGIN', 1, 0);
 
-        // set initial camera position
-        var pos = wade.iso.getWorldCoordinates(13, 16);
-        pos.z = 1;
-        wade.setCameraPosition(pos);
+        // Create game and mode objects
+        Debugger.log('Initializing game - Create objects: BEGIN', 1, 0);
 
-        // define what we want to do for every frame
+        // Create Game singleton
+        var game = new Game();
+
+        Debugger.log('Initializing game - Create objects: DONE', 1, 0);
+
+        // *** INIT GAME END ***
+
+        // *** GAME LOOP START ***
+
+        Debugger.log('Initializing game - Create main game loop: BEGIN', 1, 0);
+        // Main game loop, handles everything about game states
+        // TODO: Use JSObserver-pattern which automatically knows if observer object changes
         wade.setMainLoopCallback(function()
         {
-            // move the speech bubble so it's always in the same position relative to the witch
-            /*
-            var pos = wade.getSceneObject('chars'+hero).getPosition();
-            pos.y -= 90;
-            pos.x -= 20;
-            pos = wade.worldPositionToScreen(wade.iso.getObjectsLayerId(), pos);
-            pos.y -= 120;
-            pos.x -= 60;
-//            speechBubble.setPosition(pos);
-*/
-        }, 'myMainLoop');
+            // Main loop
+            if (game.isDirty()) {
+
+                Debugger.log('Main game loop: Executing game mode change with current stack \n' + game.toStr(), 1, 0);
+
+                // Move to next game mode and return object with new game mode information
+                game.moveToNextGameMode();
+                var nextMode = game.getCurrentGameMode();
+
+                Debugger.log('Main game loop: Next game mode will be: ' + nextMode.toStr(), 1, 0);
+
+                // Execute new mode and/or state
+
+                // TODO: Instead of if-block do something nicer
+                var gameModeSource;
+
+                switch (nextMode.mode) {
+                    case GameMode.MODES.MAINMENU:
+                        {
+                            gameModeSource = new Mainmenu();
+                            break;
+                        }
+                    case GameMode.MODES.COMBAT:
+                        {
+                            gameModeSource = new Combat();
+                            break;
+                        }
+                    case GameMode.MODES.STRATEGY:
+                        {
+                            gameModeSource = new Strategy();
+                            break;
+                        }
+                    default:
+                        {
+                            Debugger.log('Error: Invalid game mode given: ' + nextMode.mode.name, 1, 0);
+                        }
+                }
+
+                switch (nextMode.state) {
+                    case GameMode.STATES.LOAD:
+                        {
+                            gameModeSource.load();
+                            break;
+                        }
+                    case GameMode.STATES.INIT:
+                        {
+                            gameModeSource.init();
+                            break;
+                        }
+                    case GameMode.STATES.RUN:
+                        {
+                            gameModeSource.run();
+                            break;
+                        }
+                    case GameMode.STATES.UNLOAD:
+                        {
+                            gameModeSource.unload();
+                            break;
+                        }
+                    default:
+                        {
+                            Debugger.log('Error: Invalid game state given: ' + nextMode.state.name, 1, 0);
+                        }
+                }
+
+            }
+        }, 'mainGameLoop');
+        Debugger.log('Initializing game - Create main game loop: DONE', 1, 0);
+
+        Debugger.log('Start game: BEGIN', 1, 0);
+
+        // Start in main menu mode
+        var initialGameMode = new GameMode(GameMode.MODES.MAINMENU, GameMode.STATES.LOAD);
+        game.enqueueGameMode(initialGameMode);
+
+        Debugger.log('Start game: DONE. Started in Main Menu -mode', 1, 0);
+
     };
 
-    this.onMouseDown = function(eventData)
-    {
-        // store coordinates when the mouse button is pressed (or when the screen is touched)
-        this.mouseDownPosition = eventData.screenPosition;
-        this.clickCameraPosition = wade.getCameraPosition();
-    };
-
-    // pan
-    this.onMouseMove = function(eventData)
-    {
-        if (wade.isMouseDown())
-        {
-            // see how much we've moved since the onMouseDown event
-            var dx = this.mouseDownPosition.x - eventData.screenPosition.x;
-            var dy = this.mouseDownPosition.y - eventData.screenPosition.y;
-
-            // update camera position
-            var cameraPos = {x: this.clickCameraPosition.x + dx,
-                y: this.clickCameraPosition.y + dy,
-                z: this.clickCameraPosition.z};
-            wade.setCameraPosition(cameraPos);
-        }
-    };
-
-    // zoom
-    this.onMouseWheel = function(eventData)
-    {
-        var cameraPos = wade.getCameraPosition();
-        cameraPos.z = Math.max(0.4, cameraPos.z - eventData.value * 0.05);
-        wade.setCameraPosition(cameraPos);
-    };
-
-
-    // TODO: Move to own file, however it requires creation of object of "game" which holds global information
-    this.startCombat = function() {
-
-        console.log('Start game... starting');
-
-        // Debug: Log JSON
-        console.log('JSON');
-        console.log(mapDataJson);
-        
-        // Read numTiles from JSON and set it to global variable
-        numTiles = mapDataJson.data.world.numTiles;
-
-        // Initialize wade isometric
-        wade.iso.init({numTiles: numTiles, movementDirection: 'both'});
-        wade.setClickTolerance(15);
-
-        // Test paths
-        var basePath = wade.getBasePath();
-        console.log('Base path' + basePath);
-
-
-
-        console.log('Start game... done!');
-    };
 
 };
 
