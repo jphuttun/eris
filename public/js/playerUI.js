@@ -25,7 +25,7 @@ function playerUI(characterIndex, characterData, isDebugging, debugType) { // Co
 	this.selectedCharacterIndex = characterIndex;
 	this.characterData = characterData;
 	
-	self = this;
+	var self = this;
 	
 	// create UI-button
 		
