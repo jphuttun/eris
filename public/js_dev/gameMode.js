@@ -25,8 +25,9 @@ GameMode.prototype.toJSONStr = function() {
 
 GameMode.MODES = {
     MAINMENU : {value: 0, name: "Main menu"},
-    STRATEGY : {value: 1, name: "Strategy"},
-    COMBAT : {value: 2, name: "Combat"}
+    CREDITS : {value: 1, name: "Credits"},
+    STRATEGY : {value: 2, name: "Strategy"},
+    COMBAT : {value: 3, name: "Combat"}
 };
 
 // STATES = Kunkin moodin ajostatus. Load = lataa resurssit. Init = Aseta alkuarvot. Run = Mainloop käynnissä. Unload = Pura resurssit

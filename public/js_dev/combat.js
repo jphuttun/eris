@@ -24,17 +24,18 @@ Combat.prototype.init = function() {
 Combat.prototype.run = function() {
     Debugger.log("Inside: Combat, RUN", 1, 0);
 
-    // TODO: Tähän tulee main game loop
-    // Main game loopin sisällä sit kutsuttais
-    var game = new Game();
-    game.enqueueGameModeAndUnloadCurrent(new GameMode(GameMode.MODES.STRATEGY, GameMode.STATES.INIT));
+    // *** MAIN GAME LOOP
+    wade.setMainLoopCallback(function() {
+        // Empty for now...
+        // TODO: Täällä pitäisi olla joku tapa päästä strategyyn (ja mainmenuun)
+    });
 };
 
 Combat.prototype.unload = function() {
     Debugger.log("Inside: Combat, UNLOAD", 1, 0);
-    var game = new Game();
 
     // Unload ready - signal that next mode can now be loaded
+    var game = new Game();
     game.setReady();
 
 };

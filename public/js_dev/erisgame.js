@@ -37,14 +37,30 @@ App = function()
         // *** REQUIRED SCRIPTS
                 
         // FROM JS
-        wade.loadScript('js_dev/debugger.js');
+        wade.loadScript('js/debugger.js');
 
         // FROM JS_DEV
         wade.loadScript('js_dev/game.js');
         wade.loadScript('js_dev/gameMode.js');
         wade.loadScript('js_dev/mainmenu.js');
         wade.loadScript('js_dev/combat.js');
+        wade.loadScript('js_dev/credits.js');
         wade.loadScript('js_dev/strategy.js');
+
+        // ******* UNDER THIS LOAD ALL IMAGES FOR <yourgamemode>.JS. THIS IS DIRTY HACK UNTIL LOADING IN <yourgamemode>.JS STARTS TO WORK
+
+        // *** MAINMENU.JS
+        wade.loadImage('images/game/mainmenu/bgmainmenu.png');
+        wade.loadImage('images/game/mainmenu/btncombat.png');
+        wade.loadImage('images/game/mainmenu/btncredits.png');
+        wade.loadImage('images/game/mainmenu/btnstrategy.png');
+
+        // *** COMBAT.JS
+
+        // *** CREDITS.JS
+        wade.loadImage('images/game/credits/animbadlynx.png');
+
+        // *** STRATEGY.JS
 
     };
 
@@ -91,6 +107,11 @@ App = function()
                     case GameMode.MODES.MAINMENU:
                         {
                             gameModeSource = new Mainmenu();
+                            break;
+                        }
+                    case GameMode.MODES.CREDITS:
+                        {
+                            gameModeSource = new Credits();
                             break;
                         }
                     case GameMode.MODES.COMBAT:
