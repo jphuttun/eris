@@ -20,6 +20,8 @@ App = function()
 	var playData1; // Helper variable for playData
 	
 	var userInt; // User Interface class
+
+    var combathandler; // Class that takes care of combat gamemode
 	
 	var self = this;
 	
@@ -44,15 +46,18 @@ App = function()
 		wade.loadScript('js/PlayerChars.js');
 		// Includes User Interface in game)
 		wade.loadScript('js/playerUI.js');
-		
+        // Temporary place where we are moving combat sequence before it will be transfered to combat.js
+        wade.loadScript('js/StartCombat.js');
+
         // *** JSON
 
         // Load JSON
         wade.preloadJson('json/erismap1.json', mapDataJson);
 
         // *** IMAGES
-
         wade.setLoadingImages('images/game/loading.png');
+
+        //StartCombat.load();
 
         // load images
         wade.loadImage('images/game/grass0.png');
@@ -77,9 +82,9 @@ App = function()
         wade.loadImage('images/game/fullIcon.jpg'); // Loading UI images
         wade.loadImage('images/game/emptyIcon.jpg'); // Loading UI images
 
-		wade.loadImage('images/game/iconOn.jpg'); // Loading UI images
+        wade.loadImage('images/game/iconOn.jpg'); // Loading UI images
         wade.loadImage('images/game/iconOff.jpg'); // Loading UI images
-		
+
         // load isometric animations for all directions
         var directions = ['n','s','w','e','ne','nw','se','sw'];
         for (var i=0; i < directions.length; i++)
@@ -97,6 +102,13 @@ App = function()
 
     this.init = function()
     {
+
+        // Create combathandler = sigleton class that takes care of combat
+        //combathandler = new StartCombat();
+        //combathandler.load();
+
+        //StartCombat.load();
+
         // ** Initialize combat
         wade.app.startCombat();
 		
@@ -176,8 +188,8 @@ App = function()
         // Create cauldrons
 
         var cauldronDataJson = mapDataJson.data.objects.cauldron;
-        var cauldron = mapDataJson.data.map.objects.cauldron[0]
-        var cauldron2 = mapDataJson.data.map.objects.cauldron[1]
+        var cauldron = mapDataJson.data.map.objects.cauldron[0];
+        var cauldron2 = mapDataJson.data.map.objects.cauldron[1];
 
         wade.iso.createObject(cauldronDataJson, cauldron.position, {"name": cauldron.name});
         wade.iso.createObject(cauldronDataJson, cauldron2.position, {"name": cauldron2.name});
@@ -325,7 +337,7 @@ App = function()
 		// UI-mode is set to targeting - meaning that you don't select other characters to activate or move
 		if (userInt.isTargeting === true) {
 			// Checking, is any character in cell that clicked
-			for (var i=0; i<chars.length; i++) {
+			for (i=0; i<chars.length; i++) {
 				if (playData[i].isDestroyed === 0) {
 					charPosition = wade.getSceneObject('chars'+i).getPosition();
 					charCellCoords = wade.iso.getCellCoordinates(charPosition.x, charPosition.y);	
@@ -390,8 +402,8 @@ App = function()
 					if (playData[hero].isDestroyed === 0) {
 						if (chars[hero].canMove)
 						{
-							var worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
-							var cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
+							worldCoords = wade.screenPositionToWorld(wade.iso.getTerrainLayerId(), eventData.screenPosition);
+							cellCoords = wade.iso.getCellCoordinates(worldCoords.x, worldCoords.y);
 							var numCells = wade.iso.getNumCells();
 							if (cellCoords.x >= 2 && cellCoords.z >= 2 && cellCoords.x < numCells.x - 2 && cellCoords.z < numCells.z - 2)
 							{
@@ -441,12 +453,12 @@ App = function()
     // TODO: Move to own file, however it requires creation of object of "game" which holds global information
     this.startCombat = function() {
 
-        console.log('Start game... starting');
+        Debugger.log("Start combat sequence... starting");
 
         // Debug: Log JSON
-        console.log('JSON');
-        console.log(mapDataJson);
-        
+        Debugger.log('JSON');
+        Debugger.log(mapDataJson);
+
         // Read numTiles from JSON and set it to global variable
         numTiles = mapDataJson.data.world.numTiles;
 
@@ -454,7 +466,7 @@ App = function()
         wade.iso.init({numTiles: numTiles, movementDirection: 'both'});
         wade.setClickTolerance(15);
 
-        console.log('Start game... done!');
+        Debugger.log('Start combat sequence... done!');
     };
 
 };
